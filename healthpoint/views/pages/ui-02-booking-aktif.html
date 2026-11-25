@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthPoint – Booking Aktif (UI-02)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <a class="app-header__brand" href="dashboard-pasien.html" aria-label="HealthPoint">
+      <span class="app-header__logo" role="img" aria-label="Logo HealthPoint"></span>
+      <span class="app-header__text"><span class="app-header__title">HealthPoint</span></span>
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>
+      <span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span>
+    </div>
+  </header>
+
+  <main class="page page--bookings">
+    <div class="section-head">
+      <h1 class="section-head__title">Booking Aktif <span class="count-badge" aria-label="1 booking">1</span></h1>
+      <a class="section-head__link" href="#">Riwayat</a>
+    </div>
+
+    <article class="booking-card">
+      <div class="booking-card__top">
+        <span class="booking-card__icon"><span class="icon icon--syringe" aria-hidden="true"></span></span>
+        <div class="booking-card__body">
+          <p class="booking-card__caption">Vaksinasi Berkala</p>
+          <h2 class="booking-card__title">Vaksin Influenza Quadrivalent</h2>
+        </div>
+        <span class="booking-card__status">Terkonfirmasi</span>
+      </div>
+
+      <ul class="booking-meta">
+        <li class="booking-meta__item booking-meta__item--strong"><span class="icon icon--calendar" aria-hidden="true"></span>Kamis, 01 Okt 2026</li>
+        <li class="booking-meta__item booking-meta__item--strong"><span class="icon icon--clock" aria-hidden="true"></span>09:00 - 11:30 WIB</li>
+        <li class="booking-meta__item"><span class="icon icon--map-pin" aria-hidden="true"></span>Ruang Vaksinasi 1</li>
+        <li class="booking-meta__item"><span class="icon icon--stethoscope" aria-hidden="true"></span>dr. Joko Wisnu</li>
+      </ul>
+
+      <div class="booking-ticket">
+        <div class="ticket-row">
+          <div class="ticket-code">
+            <span class="qr-thumb"><span class="icon icon--qr" aria-hidden="true"></span></span>
+            <div>
+              <p class="ticket-code__label">Kode Booking</p>
+              <p class="ticket-code__value">3923</p>
+            </div>
+          </div>
+          <a class="pill-button" href="#">Tampilkan QR</a>
+        </div>
+
+        <div class="cancel-note">
+          <p class="cancel-note__text"><span class="icon icon--alert" aria-hidden="true"></span>Pembatalan maks. 2 jam sebelum kunjungan</p>
+          <button class="cancel-note__button" type="button">Batalkan Booking</button>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <div class="bottom-nav__inner">
+      <a class="bottom-nav__link" href="dashboard-pasien.html"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>
+      <a class="bottom-nav__link bottom-nav__link--compact" href="#"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>
+    </div>
+  </nav>
+</div>
+</body>
+</html>

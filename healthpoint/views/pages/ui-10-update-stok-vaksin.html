@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthPoint – Pembaruan Stok Vaksin (UI-10)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <a class="app-header__brand" href="dashboard-pengelola.html" aria-label="HealthPoint">
+      <span class="app-header__logo" role="img" aria-label="Logo HealthPoint"></span>
+      <span class="app-header__text"><span class="app-header__title">HealthPoint</span></span>
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>
+      <span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span>
+    </div>
+  </header>
+
+  <main class="page page--stock">
+    <div class="success-banner" role="status">
+      <span class="success-banner__icon"><span class="icon icon--check" aria-hidden="true"></span></span>
+      <h1 class="success-banner__title">Pembaruan Stok Berhasil</h1>
+    </div>
+
+    <section class="inventory-card" aria-label="Stok vaksin terkini">
+      <div class="card-head">
+        <span class="card-head__icon card-head__icon--violet"><span class="icon icon--package" aria-hidden="true"></span></span>
+        <h2 class="card-head__title">Stok Vaksin Terkini</h2>
+      </div>
+      <div class="inv-table">
+        <div class="inv-table__head"><span>Vaksin</span><span>Stok</span><span>Min</span><span>Status</span></div>
+        <div class="inv-row inv-row--tall">
+          <span class="inv-row__name"><span class="icon icon--syringe" aria-hidden="true"></span>Influenza</span>
+          <span class="inv-row__stock">14 Dosis</span>
+          <span class="inv-row__min">2</span>
+          <span class="inv-row__status">Tersedia</span>
+        </div>
+        <div class="inv-row inv-row--low">
+          <span class="inv-row__name"><span class="icon icon--syringe" aria-hidden="true"></span>Polio IPV</span>
+          <span class="inv-row__stock">1 Dosis</span>
+          <span class="inv-row__min">2</span>
+          <span class="inv-row__status">Menipis</span>
+        </div>
+      </div>
+    </section>
+
+    <form class="stock-form" action="#" method="post">
+      <div class="card-head">
+        <span class="card-head__icon"><span class="icon icon--package" aria-hidden="true"></span></span>
+        <h2 class="card-head__title">Perbarui Stok Vaksin</h2>
+      </div>
+
+      <div class="stock-form__field">
+        <label class="stock-form__label" for="pilih-vaksin">Pilih Vaksin *</label>
+        <div class="tint-select">
+          <select class="tint-select__control" id="pilih-vaksin" name="vaksin">
+            <option selected>Vaksin Influenza (Stok: 14)</option>
+            <option>Vaksin Polio IPV (Stok: 1)</option>
+          </select>
+          <span class="tint-select__icon icon icon--chevron-down" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="stock-form__grid">
+        <div>
+          <label class="stock-form__label" for="tambah-stok">Tambah Stok *</label>
+          <div class="number-field">
+            <input class="number-field__input" id="tambah-stok" name="tambah" type="number" min="0" value="5">
+            <span class="number-field__unit">Dosis</span>
+          </div>
+        </div>
+        <div>
+          <span class="stock-form__label">Proyeksi Kuota</span>
+          <div class="projection">
+            <span class="projection__label">Setelah Update:</span>
+            <span class="projection__value">19 Dosis</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn--teal" type="submit"><span class="icon icon--save" aria-hidden="true"></span>Simpan Pembaruan</button>
+    </form>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <div class="bottom-nav__inner">
+      <a class="bottom-nav__link" href="dashboard-pengelola.html"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>
+      <a class="bottom-nav__link bottom-nav__link--compact" href="#"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>
+    </div>
+  </nav>
+</div>
+</body>
+</html>
