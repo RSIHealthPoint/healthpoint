@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthPoint – Kelola Jadwal &amp; Ketersediaan (UI-06)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <a class="app-header__brand" href="../dashboards/dashboard-pengelola.html" aria-label="HealthPoint">
+      <span class="app-header__logo" role="img" aria-label="Logo HealthPoint"></span>
+      <span class="app-header__text">
+        <span class="app-header__title">HealthPoint</span>
+        <span class="app-header__subtitle">Klinik Pratama</span>
+      </span>
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>
+      <span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span>
+    </div>
+  </header>
+
+  <main class="page page--schedule">
+    <h1 class="page-title">Formulir Kelola Jadwal &amp; Ketersediaan</h1>
+
+    <form class="schedule-card" action="#" method="post">
+      <div class="field-group">
+        <div class="field-group__head">
+          <label class="mini-label" for="dokter-poli">Pilih Dokter &amp; Poli</label>
+          <span class="mini-label mini-label--muted">3 Dokter</span>
+        </div>
+        <div class="select-field">
+          <select class="select-field__control" id="dokter-poli" name="dokter">
+            <option selected>dr. Teguh Jaya Sakti - Poli Umum (Shift Pagi)</option>
+            <option>dr. Ratna Pratiwi - Poli Umum (Shift Siang)</option>
+            <option>dr. Hendra Kusuma, Sp.A - Poli Anak (Shift Sore)</option>
+          </select>
+          <span class="select-field__icon icon icon--chevron-down" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <div class="field-group field-group--wide">
+        <span class="mini-label mini-label--muted">Hari Kerja</span>
+        <div class="chip-row">
+          <button class="chip-button" type="button"><span class="icon icon--calendar" aria-hidden="true"></span>Pilih Hari...</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <span class="mini-label">Jam Operasional</span>
+        <div class="time-row">
+          <div class="time-field">
+            <label class="mini-label mini-label--muted" for="jam-mulai">Jam Mulai:</label>
+            <input class="time-field__input" id="jam-mulai" name="mulai" type="time" value="08:00">
+          </div>
+          <div class="time-field">
+            <label class="mini-label mini-label--muted" for="jam-selesai">Jam Selesai:</label>
+            <input class="time-field__input" id="jam-selesai" name="selesai" type="time" value="14:00">
+          </div>
+        </div>
+      </div>
+
+      <fieldset class="field-group">
+        <legend class="mini-label">Status Ketersediaan:</legend>
+        <div class="chip-row">
+          <label class="toggle-chip">
+            <input class="toggle-chip__input" type="radio" name="status" value="tersedia" checked>
+            <span class="toggle-chip__body"><span class="icon icon--check" aria-hidden="true"></span>Tersedia</span>
+          </label>
+          <label class="toggle-chip">
+            <input class="toggle-chip__input" type="radio" name="status" value="istirahat">
+            <span class="toggle-chip__body"><span class="icon icon--clock" aria-hidden="true"></span>Istirahat</span>
+          </label>
+          <label class="toggle-chip">
+            <input class="toggle-chip__input" type="radio" name="status" value="libur">
+            <span class="toggle-chip__body"><span class="icon icon--x" aria-hidden="true"></span>Libur</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <button class="btn btn--tiny" type="submit"><span class="icon icon--save" aria-hidden="true"></span>Simpan Jadwal Dokter</button>
+    </form>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <div class="bottom-nav__inner">
+      <a class="bottom-nav__link" href="../dashboards/dashboard-pengelola.html"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>
+      <a class="bottom-nav__link bottom-nav__link--compact" href="#"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>
+    </div>
+  </nav>
+</div>
+</body>
+</html>

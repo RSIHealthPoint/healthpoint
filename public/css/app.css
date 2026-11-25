@@ -1,0 +1,94 @@
+/* =========================================================
+   HealthPoint – app.css
+   Pelengkap style.css (desain UI). Berisi komponen generik yang dirender
+   langsung oleh aplikasi PHP: pesan, kartu data, form, dan beranda.
+   Hanya memakai token (--c-*, --font-*, --shadow-*) dari style.css.
+   ========================================================= */
+
+.page--app { padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+.app-header__user {
+  display: flex; align-items: center; gap: 8px;
+  font: 600 12px/16px var(--font-ui); letter-spacing: 0.24px; color: var(--c-primary);
+}
+.app-header__user small { color: var(--c-muted); font-weight: 500; text-transform: capitalize; }
+
+/* ---------- Judul halaman ---------- */
+.app-title { font: 700 22px/28px var(--font-display); color: var(--c-ink); }
+.page-code {
+  align-self: flex-start; display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 9999px;
+  background: var(--c-lavender); font: 700 10px/14px var(--font-ui); letter-spacing: 0.5px; color: var(--c-primary);
+}
+.section-title { margin-top: 6px; font: 600 14px/20px var(--font-display); color: var(--c-text-2); }
+
+/* ---------- Pesan ---------- */
+.notice {
+  display: block; padding: 12px 14px; border-radius: 12px;
+  font: 500 13px/18px var(--font-body); background: var(--c-lavender); color: var(--c-primary);
+  border: 1px solid transparent;
+}
+.notice--sukses { background: var(--c-mint); color: var(--c-teal); border-color: rgba(0, 106, 97, 0.2); }
+.notice--galat  { background: var(--c-red-soft); color: var(--c-red-dark); border-color: rgba(186, 26, 26, 0.2); }
+.notice--info   { background: var(--c-lavender); color: var(--c-primary); }
+
+/* ---------- Kartu data (pengganti tabel; nyaman di layar 360px) ---------- */
+.data-list { display: flex; flex-direction: column; gap: 8px; }
+.data-item {
+  padding: 12px 14px; background: #fff; border: 1px solid var(--c-border); border-radius: 14px; box-shadow: var(--shadow-card);
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline;
+}
+.data-item dt { font: 700 10px/14px var(--font-ui); letter-spacing: 0.5px; text-transform: uppercase; color: var(--c-muted); }
+.data-item dd { margin: 0; font: 500 13px/18px var(--font-body); color: var(--c-text); overflow-wrap: anywhere; }
+.data-empty { padding: 14px; border-radius: 12px; background: var(--c-field); text-align: center; font: 500 13px/18px var(--font-body); color: var(--c-muted); }
+.data-grid--app { margin: 0; }
+.data-grid--app .data-tile { background: #fff; border: 1px solid var(--c-border); }
+.data-grid--app .data-tile__value { overflow-wrap: anywhere; }
+
+/* ---------- Form ---------- */
+.app-form {
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 16px; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px -2px rgba(30, 27, 75, 0.06);
+}
+.app-form label {
+  display: flex; flex-direction: column; gap: 4px;
+  font: 600 12px/16px var(--font-display); color: var(--c-text-2);
+}
+.app-form input:not([type=checkbox]):not([type=hidden]), .app-form select, .app-form textarea {
+  width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 12px;
+  border: 1px solid var(--c-border-2); background: var(--c-field);
+  font: 400 14px/20px var(--font-body); color: var(--c-ink);
+}
+.app-form select { appearance: none; -webkit-appearance: none; padding-right: 36px;
+  background: var(--c-field) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%233B2E7E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") right 14px center no-repeat; }
+.app-form textarea { min-height: 88px; resize: vertical; }
+.app-form input:focus, .app-form select:focus, .app-form textarea:focus { border-color: var(--c-teal-bright); background: #fff; }
+.app-form label:has(> input[type=checkbox]) {
+  flex-direction: row; align-items: center; gap: 10px; font: 500 13px/18px var(--font-body); color: var(--c-text);
+}
+.app-form input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--c-teal); }
+.app-form button {
+  min-height: 44px; padding: 12px 16px; border-radius: 12px; background: var(--c-primary); color: #fff;
+  box-shadow: var(--shadow-raised); font: 700 13px/16px var(--font-display); letter-spacing: 0.3px;
+}
+.app-form button:hover { background: var(--c-primary-dark); }
+
+.app-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 600 12px/16px var(--font-ui); letter-spacing: 0.24px; color: var(--c-teal);
+}
+.app-link::after { content: "→"; }
+.page--app p { font: 400 13px/19px var(--font-body); color: var(--c-text-2); }
+.page--app h3 { font: 600 14px/20px var(--font-display); color: var(--c-text-2); margin-top: 6px; }
+
+/* ---------- Login ---------- */
+.login__error { margin-top: 12px; }
+.login__hint { margin-top: 14px; text-align: center; font: 400 11px/16px var(--font-body); color: var(--c-muted); }
+
+/* ---------- Beranda ---------- */
+.home-lead { font: 400 13px/19px var(--font-body); color: var(--c-text-2); }
+.page--dashboard .panel { margin-top: 14px; }
+.service-card__icon .icon { --icon-size: 20px; }
+a.service-card:hover { box-shadow: var(--shadow-raised); }
+
+/* ---------- Layar sempit & aksesibilitas ---------- */
+@media (max-width: 380px) { .app { max-width: 100%; } }

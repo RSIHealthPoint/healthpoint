@@ -8,9 +8,10 @@
  */
 declare(strict_types=1);
 
-require dirname(__DIR__) . '/bootstrap.php';
+require dirname(__DIR__) . '/config/bootstrap.php';
+require __DIR__ . '/pemuat.php';
 
-use HealthPoint\Core\{Auth, Database, Jejak, Request, Router, Seeder, Sesi, Waktu};
+use HealthPoint\Core\{Auth, Database, Jejak, Request, Router, Sesi, Waktu};
 use HealthPoint\Flows\{FlowResult, Uc01DaftarLayanan, Uc02DaftarBookingAktif, Uc03BatalkanBooking, Uc04UbahStatusPasien, Uc05NomorPosisiAntrean,
     Uc06EstimasiWaktuTunggu, Uc07JadwalDokter, Uc08KelolaJadwalDokter, Uc09IsiHasilPemeriksaan, Uc10TentukanTanggalKontrol, Uc11SimpanDataLayanan,
     Uc12KelolaStokVaksin, Uc13DaftarVaksinasi, Uc14CariRiwayatPasien, Uc15PilihKandidat, Uc16LaporanHarian, Uc17LaporanKuotaVaksin};
@@ -22,10 +23,9 @@ function baru(): Database
 {
     Waktu::setSekarang(HARI_INI . ' 09:00:00');
     $cfg = require dirname(__DIR__) . '/config/config.php';
-    $db = new Database(['nama' => 'healthpoint_test'] + $cfg);
-    $db->hapusSemuaTabel();
-    $db->migrasi();
-    Seeder::isi($db);
+    // MySQL: database terpisah `healthpoint_test`; SQLite: basis data di memori (tidak menyentuh berkas aplikasi).
+    $db = new Database(['nama' => $cfg['driver'] === 'sqlite' ? ':memory:' : 'healthpoint_test', 'buat' => true] + $cfg);
+    muatDatabase($db);
     return $db;
 }
 
@@ -42,6 +42,14 @@ function urutan(FlowResult $r, array $harapan, string $label): void
 {
     $nyata = $r->nomorPesan();
     tegas($nyata === $harapan, "$label — urutan pesan\n      harapan: " . implode(',', $harapan) . "\n      nyata  : " . implode(',', $nyata));
+}
+
+/** Pengujian khusus MySQL/MariaDB (information_schema, mode ketat); dilewati bila HP_DB_DRIVER=sqlite. */
+function ujiMysql(string $nama, callable $fn): void
+{
+    $cfg = require dirname(__DIR__) . '/config/config.php';
+    if ($cfg['driver'] !== 'mysql') { echo "[LEWAT] $nama (khusus MySQL)\n"; return; }
+    uji($nama, $fn);
 }
 
 function uji(string $nama, callable $fn): void
@@ -303,7 +311,7 @@ uji('UC-17 Main dan Alt-1', function () use ($pasien1, $pengelola) {
 });
 
 // ---------------------------------------------------------------- Kesesuaian skema dengan DDL.pdf 2.5
-uji('Skema MySQL sesuai DDL.pdf: tabel, tipe/panjang, NULL, PK, UQ, FK, kardinalitas', function () {
+ujiMysql('Skema MySQL sesuai DDL.pdf: tabel, tipe/panjang, NULL, PK, UQ, FK, kardinalitas', function () {
     $db = baru();
     // [kolom => [COLUMN_TYPE, nullable, extra]] persis seperti tabel entitas DDL.pdf (Constraint "-" = boleh NULL).
     $spec = [
@@ -372,7 +380,7 @@ uji('Skema MySQL sesuai DDL.pdf: tabel, tipe/panjang, NULL, PK, UQ, FK, kardinal
     }
     tegas(count($spec) === 13, '13 entitas DDL tercakup (PendaftaranVaksinasi, RekamMedis, dst.)');
 });
-uji('Contoh data DDL.pdf dapat disimpan (panjang/tipe) & batas panjang ditolak', function () {
+ujiMysql('Contoh data DDL.pdf dapat disimpan (panjang/tipe) & batas panjang ditolak', function () {
     $db = baru();
     $db->jalankan("INSERT INTO DataPasien (noRM,nama,tanggalLahir,jenisKelamin,alamat,noTelepon) VALUES ('RM-000123','Karina','1995-03-09','Perempuan','Jl. Jaya No. 5, Malang','081222889990')");
     $db->jalankan("INSERT INTO Booking (idPasien,idLayanan,tanggalKunjungan,status,jamKontrol,jenisBooking) VALUES (?,1,'2026-11-06','Aktif','09.00','Kontrol')", [$db->idTerakhir()]);
