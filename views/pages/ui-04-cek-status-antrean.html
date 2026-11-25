@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthPoint – Cek Status Antrean (UI-04)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <a class="app-header__brand" href="dashboard-pasien.html" aria-label="HealthPoint">
+      <span class="app-header__logo" role="img" aria-label="Logo HealthPoint"></span>
+      <span class="app-header__text"><span class="app-header__title">HealthPoint</span></span>
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>
+      <span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span>
+    </div>
+  </header>
+
+  <main class="page page--status">
+    <header class="status-head">
+      <div class="status-head__title">
+        <span class="status-head__icon"><span class="icon icon--ticket" aria-hidden="true"></span></span>
+        <h1>Cek Status Antrean</h1>
+      </div>
+      <span class="live-badge">Live Track</span>
+    </header>
+
+    <section class="status-card" aria-label="Hasil pengecekan antrean">
+      <form class="status-search" action="#" method="get">
+        <div class="status-search__row">
+          <div class="status-search__field status-search__field--ticket">
+            <label class="status-search__label" for="nomor-antrean">Nomor Antrean</label>
+            <div class="status-search__control">
+              <span class="icon icon--ticket" aria-hidden="true"></span>
+              <input class="status-search__input status-search__input--ticket" id="nomor-antrean" name="nomor" type="text" value="A-018">
+            </div>
+          </div>
+          <div class="status-search__field">
+            <label class="status-search__label" for="tanggal-kunjungan">Tanggal Kunjungan</label>
+            <div class="status-search__control">
+              <span class="icon icon--calendar" aria-hidden="true"></span>
+              <input class="status-search__input status-search__input--date" id="tanggal-kunjungan" name="tanggal" type="text" value="01 Okt 2026">
+            </div>
+          </div>
+        </div>
+        <button class="btn btn--search" type="submit"><span class="icon icon--search" aria-hidden="true"></span>Cek Antrean Saya</button>
+      </form>
+
+      <p class="result-banner"><span class="icon icon--check-circle" aria-hidden="true"></span>Antrean Ditemukan: Poli Umum (Sesi Pagi)</p>
+
+      <article class="queue-ticket" aria-label="Tiket antrean A-018">
+        <div class="queue-ticket__ticker">
+          <span class="live-chip"><span class="live-chip__dot" aria-hidden="true"></span>Dipanggil Saat Ini: A-014</span>
+          <span class="room-chip">Poli Umum • R.03</span>
+        </div>
+        <p class="queue-ticket__label">Nomor Antrean Anda</p>
+        <p class="queue-ticket__number">A-018</p>
+        <p class="queue-ticket__ahead">(3 Pasien di Depan)</p>
+        <div class="queue-ticket__wait">
+          <p class="queue-ticket__wait-label">Estimasi Tunggu</p>
+          <p class="wait-pill"><span class="icon icon--hourglass" aria-hidden="true"></span>12 Menit</p>
+        </div>
+        <p class="queue-ticket__meta"><span class="icon icon--stethoscope" aria-hidden="true"></span>dr. Sulisno Wijaya</p>
+        <p class="queue-ticket__status"><span class="queue-ticket__status-dot" aria-hidden="true"></span>Menunggu di Ruang Tunggu</p>
+      </article>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <div class="bottom-nav__inner">
+      <a class="bottom-nav__link" href="dashboard-pasien.html"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>
+      <a class="bottom-nav__link bottom-nav__link--compact" href="#"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>
+    </div>
+  </nav>
+</div>
+</body>
+</html>

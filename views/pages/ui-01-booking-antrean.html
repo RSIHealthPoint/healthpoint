@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthPoint – Pendaftaran Poli Umum (UI-01)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <a class="app-header__brand" href="dashboard-pasien.html" aria-label="HealthPoint">
+      <span class="app-header__logo" role="img" aria-label="Logo HealthPoint"></span>
+      <span class="app-header__text"><span class="app-header__title">HealthPoint</span></span>
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>
+      <span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span>
+    </div>
+  </header>
+
+  <main class="page page--form">
+    <header class="page-heading">
+      <span class="page-heading__icon"><span class="icon icon--file-text" aria-hidden="true"></span></span>
+      <div>
+        <h1 class="page-heading__title">Pendaftaran Poli Umum</h1>
+        <p class="page-heading__subtitle">Formulir Booking Antrean</p>
+      </div>
+    </header>
+
+    <form class="booking-form" action="ui-02-booking-aktif.html" method="get">
+      <div class="form-group">
+        <label class="form-label" for="tanggal-booking">Pilih Tanggal Booking</label>
+        <div class="date-field">
+          <input class="date-field__input" id="tanggal-booking" name="tanggal" type="date" value="2026-10-01">
+          <span class="date-field__icon icon icon--calendar" aria-hidden="true"></span>
+        </div>
+      </div>
+
+      <fieldset class="choice-group">
+        <legend class="form-label">Pilih Jadwal</legend>
+        <div class="choice-list">
+          <label class="choice">
+            <input class="choice__input" type="radio" name="jadwal" value="nabila-maulidya" checked>
+            <span class="choice__body">
+              <span class="choice__header">
+                <span class="choice__title"><span class="choice__radio" aria-hidden="true"></span><span class="choice__name">dr. Nabila Maulidya</span></span>
+                <span class="choice__pill">08:00 - 12:00</span>
+              </span>
+              <span class="choice__metrics">
+                <span class="choice__metric"><span class="choice__metric-label">Antrean diambil:</span><span class="choice__metric-value">18</span></span>
+                <span class="choice__metric"><span class="choice__metric-label">Sisa antrean:</span><span class="choice__metric-value choice__metric-value--accent">4</span></span>
+              </span>
+            </span>
+          </label>
+          <label class="choice">
+            <input class="choice__input" type="radio" name="jadwal" value="sunaryo-wijaya">
+            <span class="choice__body">
+              <span class="choice__header">
+                <span class="choice__title"><span class="choice__radio" aria-hidden="true"></span><span class="choice__name">dr. Sunaryo Wijaya</span></span>
+                <span class="choice__pill">09:00 - 13:00</span>
+              </span>
+              <span class="choice__metrics">
+                <span class="choice__metric"><span class="choice__metric-label">Antrean diambil:</span><span class="choice__metric-value">7</span></span>
+                <span class="choice__metric"><span class="choice__metric-label">Sisa antrean:</span><span class="choice__metric-value choice__metric-value--accent">13</span></span>
+              </span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="form-group form-group--keluhan">
+        <label class="form-label" for="keluhan">Keluhan</label>
+        <textarea class="textarea" id="keluhan" name="keluhan" placeholder="Tuliskan keluhan atau gejala yang dirasakan..."></textarea>
+      </div>
+
+      <button class="btn btn--form" type="submit">Simpan &amp; Konfirmasi Booking Layanan</button>
+    </form>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <div class="bottom-nav__inner">
+      <a class="bottom-nav__link" href="dashboard-pasien.html"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>
+      <a class="bottom-nav__link bottom-nav__link--compact" href="#"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>
+    </div>
+  </nav>
+</div>
+</body>
+</html>
