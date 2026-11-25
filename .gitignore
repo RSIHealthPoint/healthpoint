@@ -1,0 +1,6 @@
+# Basis data SQLite lokal (mode opsional) dan berkas editor/OS
+database/*.sqlite
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

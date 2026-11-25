@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HealthPoint – Ketersediaan Dokter (UI-05)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <a class="app-header__brand" href="../dashboards/dashboard-petugas.html" aria-label="HealthPoint">
+      <span class="app-header__logo" role="img" aria-label="Logo HealthPoint"></span>
+      <span class="app-header__text"><span class="app-header__title">HealthPoint</span></span>
+    </a>
+    <div class="app-header__actions">
+      <button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>
+      <span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span>
+    </div>
+  </header>
+
+  <main class="page page--availability">
+    <header class="availability-head">
+      <h1 class="availability-head__title">Ketersediaan Dokter</h1>
+      <p class="availability-head__subtitle">Praktek aktif hari ini di Klinik Pratama</p>
+    </header>
+
+    <section class="availability-card" aria-label="Daftar dokter hari ini">
+      <div class="legend">
+        <span class="legend__item"><span class="legend__dot" aria-hidden="true"></span>Sedang Praktik</span>
+      </div>
+
+      <ul class="doctor-list">
+        <li class="doctor-card doctor-card--first">
+          <span class="doctor-card__avatar"><span class="icon icon--user" aria-hidden="true"></span></span>
+          <div class="doctor-card__body">
+            <h2 class="doctor-card__name">dr. Sulistino</h2>
+            <p class="doctor-card__spec">Dokter Umum • Ruang 01</p>
+            <p class="doctor-card__time">Praktek: 08:00 - 14:00</p>
+          </div>
+          <div class="doctor-card__aside">
+            <span class="status-chip status-chip--on">Tersedia</span>
+            <a class="mini-button" href="#">Detail</a>
+          </div>
+        </li>
+        <li class="doctor-card">
+          <span class="doctor-card__avatar"><span class="icon icon--user" aria-hidden="true"></span></span>
+          <div class="doctor-card__body">
+            <h2 class="doctor-card__name">dr. Ratna Pratiwi</h2>
+            <p class="doctor-card__spec">Dokter Umum • Ruang 02</p>
+            <p class="doctor-card__time">Praktek: 09:00 - 15:30</p>
+          </div>
+          <div class="doctor-card__aside">
+            <span class="status-chip status-chip--on">Tersedia</span>
+            <a class="mini-button" href="#">Detail</a>
+          </div>
+        </li>
+        <li class="doctor-card doctor-card--off">
+          <span class="doctor-card__avatar"><span class="icon icon--user" aria-hidden="true"></span></span>
+          <div class="doctor-card__body">
+            <h2 class="doctor-card__name">dr. Hendra Kusuma, Sp.A</h2>
+            <p class="doctor-card__spec">Dokter Spesialis Anak</p>
+            <p class="doctor-card__time">Mulai: 16:00 WIB</p>
+          </div>
+          <div class="doctor-card__aside">
+            <span class="status-chip status-chip--off">Istirahat</span>
+            <span class="mini-button mini-button--off">Tutup</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigasi utama">
+    <div class="bottom-nav__inner">
+      <a class="bottom-nav__link" href="../dashboards/dashboard-petugas.html"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>
+      <a class="bottom-nav__link bottom-nav__link--compact" href="#"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>
+    </div>
+  </nav>
+</div>
+</body>
+</html>

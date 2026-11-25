@@ -1,0 +1,225 @@
+/* =========================================================
+   HealthPoint – app.css
+   Pelengkap style.css (desain UI). Berisi komponen generik yang dirender
+   langsung oleh aplikasi PHP: pesan, kartu data, form, dan beranda.
+   Hanya memakai token (--c-*, --font-*, --shadow-*) dari style.css.
+   ========================================================= */
+
+.page--app { padding: 16px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+
+.app-header__user {
+  display: flex; align-items: center; gap: 8px;
+  font: 600 12px/16px var(--font-ui); letter-spacing: 0.24px; color: var(--c-primary);
+}
+.app-header__user small { color: var(--c-muted); font-weight: 500; text-transform: capitalize; }
+
+/* ---------- Judul halaman ---------- */
+.app-title { font: 700 22px/28px var(--font-display); color: var(--c-ink); }
+.page-code {
+  align-self: flex-start; display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 9999px;
+  background: var(--c-lavender); font: 700 10px/14px var(--font-ui); letter-spacing: 0.5px; color: var(--c-primary);
+}
+.section-title { margin-top: 6px; font: 600 14px/20px var(--font-display); color: var(--c-text-2); }
+
+/* ---------- Pesan ---------- */
+.notice {
+  display: block; padding: 12px 14px; border-radius: 12px;
+  font: 500 13px/18px var(--font-body); background: var(--c-lavender); color: var(--c-primary);
+  border: 1px solid transparent;
+}
+.notice--sukses { background: var(--c-mint); color: var(--c-teal); border-color: rgba(0, 106, 97, 0.2); }
+.notice--galat  { background: var(--c-red-soft); color: var(--c-red-dark); border-color: rgba(186, 26, 26, 0.2); }
+.notice--info   { background: var(--c-lavender); color: var(--c-primary); }
+
+/* ---------- Kartu data (pengganti tabel; nyaman di layar 360px) ---------- */
+.data-list { display: flex; flex-direction: column; gap: 8px; }
+.data-item {
+  padding: 12px 14px; background: #fff; border: 1px solid var(--c-border); border-radius: 14px; box-shadow: var(--shadow-card);
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: baseline;
+}
+.data-item dt { font: 700 10px/14px var(--font-ui); letter-spacing: 0.5px; text-transform: uppercase; color: var(--c-muted); }
+.data-item dd { margin: 0; font: 500 13px/18px var(--font-body); color: var(--c-text); overflow-wrap: anywhere; }
+.data-empty { padding: 14px; border-radius: 12px; background: var(--c-field); text-align: center; font: 500 13px/18px var(--font-body); color: var(--c-muted); }
+.data-grid--app { margin: 0; }
+.data-grid--app .data-tile { background: #fff; border: 1px solid var(--c-border); }
+.data-grid--app .data-tile__value { overflow-wrap: anywhere; }
+
+/* ---------- Form ---------- */
+.app-form {
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 16px; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px -2px rgba(30, 27, 75, 0.06);
+}
+.app-form label {
+  display: flex; flex-direction: column; gap: 4px;
+  font: 600 12px/16px var(--font-display); color: var(--c-text-2);
+}
+.app-form input:not([type=checkbox]):not([type=hidden]), .app-form select, .app-form textarea {
+  width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 12px;
+  border: 1px solid var(--c-border-2); background: var(--c-field);
+  font: 400 14px/20px var(--font-body); color: var(--c-ink);
+}
+.app-form select { appearance: none; -webkit-appearance: none; padding-right: 36px;
+  background: var(--c-field) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%233B2E7E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>") right 14px center no-repeat; }
+.app-form textarea { min-height: 88px; resize: vertical; }
+.app-form input:focus, .app-form select:focus, .app-form textarea:focus { border-color: var(--c-teal-bright); background: #fff; }
+.app-form label:has(> input[type=checkbox]) {
+  flex-direction: row; align-items: center; gap: 10px; font: 500 13px/18px var(--font-body); color: var(--c-text);
+}
+.app-form input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--c-teal); }
+.app-form button {
+  min-height: 44px; padding: 12px 16px; border-radius: 12px; background: var(--c-primary); color: #fff;
+  box-shadow: var(--shadow-raised); font: 700 13px/16px var(--font-display); letter-spacing: 0.3px;
+}
+.app-form button:hover { background: var(--c-primary-dark); }
+
+.app-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 600 12px/16px var(--font-ui); letter-spacing: 0.24px; color: var(--c-teal);
+}
+.app-link::after { content: "→"; }
+.page--app p { font: 400 13px/19px var(--font-body); color: var(--c-text-2); }
+.page--app h3 { font: 600 14px/20px var(--font-display); color: var(--c-text-2); margin-top: 6px; }
+
+/* ---------- Login ---------- */
+.login__error { margin-top: 12px; }
+.login__hint { margin-top: 14px; text-align: center; font: 400 11px/16px var(--font-body); color: var(--c-muted); }
+
+/* ---------- Beranda ---------- */
+.home-lead { font: 400 13px/19px var(--font-body); color: var(--c-text-2); }
+.page--dashboard .panel { margin-top: 14px; }
+.service-card__icon .icon { --icon-size: 20px; }
+a.service-card:hover { box-shadow: var(--shadow-raised); }
+
+/* ---------- Layar sempit & aksesibilitas ---------- */
+@media (max-width: 380px) { .app { max-width: 100%; } }
+
+/* =========================================================
+   Halaman Dokter (UC-09 / 10 / 11) – ikon & komponen tambahan
+   ========================================================= */
+.icon--list-search { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 6H3M10 12H3M10 18H3'/><circle cx='17' cy='15' r='3'/><path d='m21 19-1.9-1.9'/></svg>"); }
+.icon--list-edit { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M3 6h12M3 12h8M3 18h6'/><path d='M18.4 12.6a2 2 0 0 1 3 3L15 22l-4 1 1-4z'/></svg>"); }
+.icon--x-circle { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='m15 9-6 6M9 9l6 6'/></svg>"); }
+.icon--calendar-plus { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M8 2v4M16 2v4'/><path d='M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8M3 10h18M16 19h6M19 16v6'/></svg>"); }
+
+.page--clinical .notice { margin-top: 12px; }
+.req { color: var(--c-red); }
+
+/* Daftar kandidat bila nama pasien kembar */
+.candidate-hint { margin-top: 12px; font: 600 12px/16px var(--font-ui); letter-spacing: 0.24px; color: var(--c-primary); }
+.candidate-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.candidate { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; background: #fff; border-radius: 12px; box-shadow: var(--shadow-card); }
+.candidate__name { font: 600 14px/20px var(--font-display); color: var(--c-primary); }
+.candidate__meta { font: 400 12px/18px var(--font-body); color: var(--c-muted); }
+
+/* Textarea tindakan boleh tumbuh bila teks panjang */
+.findings__field--double { height: auto; min-height: 46px; resize: vertical; }
+
+/* Kartu jadwal kontrol hanya tampil saat toggle "Perlu Jadwal Kontrol Ulang?" aktif (tanpa JavaScript) */
+.followup-slot { display: none; }
+.dokter-form:has(.switch__input:checked) .followup-slot { display: block; }
+.dokter-form .followup-card { margin-top: 10px; }
+.dokter-form .btn--save { margin-top: 12px; }
+
+/* =========================================================
+   Halaman Pengelola (UC-12 / 16 / 17) – ikon & penyesuaian
+   ========================================================= */
+.icon--archive { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='20' height='5' x='2' y='3' rx='1'/><path d='M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4'/></svg>"); }
+.icon--search-check { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m8 11 2 2 4-4'/><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>"); }
+.icon--tooth { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 5.5c-1.5-1.5-5-2-6.5 0C3.8 7.7 4.5 11 5.5 13c.8 1.6.6 3.5 1.2 5.2.4 1.2 1.6 1.2 2 0 .6-1.6.9-3.4 3.3-3.4s2.7 1.8 3.3 3.4c.4 1.2 1.6 1.2 2 0 .6-1.7.4-3.6 1.2-5.2 1-2 1.7-5.3 0-7.5-1.5-2-5-1.5-6.5 0z'/></svg>"); }
+
+.page--stock .notice, .page--quota .notice, .page--report .notice { margin-top: 8px; }
+.page--stock > .success-banner + .inventory-card { margin-top: 10px; }
+
+/* Banner sukses: lingkaran teal solid seperti desain */
+.success-banner__icon { background: var(--c-teal); color: #fff; }
+
+/* Kolom jumlah stok boleh melebar */
+.number-field__input { width: 100%; min-width: 0; }
+
+/* Pemilih tanggal pada laporan (input date di dalam chip) */
+.date-chip { cursor: pointer; }
+.date-chip__input { min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; color: inherit; color-scheme: dark; }
+.date-chip--light .date-chip__input { color-scheme: light; }
+.quota-card .date-picker { margin-top: 12px; }
+
+/* =========================================================
+   Halaman Petugas (UC-04 / 08 / 14 / 15) – ikon & penyesuaian
+   ========================================================= */
+.icon--user-voice { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='9' cy='8' r='4'/><path d='M2 21v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1'/><path d='M17 5a3.5 3.5 0 0 1 0 5M20 3a7 7 0 0 1 0 9'/></svg>"); }
+.icon--megaphone { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m3 11 18-5v12L3 14v-3z'/><path d='M11.6 16.8a3 3 0 1 1-5.8-1.6'/></svg>"); }
+.icon--coffee { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 2v2M14 2v2M6 2v2'/><path d='M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1'/></svg>"); }
+
+.page--queue .notice, .page--schedule .notice { margin-top: 9px; margin-bottom: 9px; }
+.page--queue .data-empty { margin-top: 9px; }
+.page--search .notice { margin-bottom: 12px; }
+
+/* Kartu detail / kandidat di halaman pencarian (padding halaman lebih sempit) */
+.page--search .candidate-card, .page--search .candidate-hint, .page--search .candidate-list { margin-left: 5px; margin-right: 5px; }
+.back-link { margin-top: 12px; }
+.app-link--back::after { content: none; }
+.app-link--back::before { content: "←"; }
+
+/* Pilihan hari (chip berisi select) */
+.select-chip { position: relative; display: inline-flex; align-items: center; --icon-size: 10.5px; }
+.select-chip .icon { position: absolute; left: 9px; pointer-events: none; color: var(--c-text); }
+.select-chip__control {
+  min-height: 44px; padding: 0 12px 0 26px; appearance: none; -webkit-appearance: none; border-radius: 12px;
+  background: var(--c-field); font: 700 10px/14px var(--font-ui); letter-spacing: 0.5px; color: var(--c-text);
+}
+
+/* Perbaikan kolom Tanggal Lahir & No. RM yang melebar (halaman Cari Pasien) */
+.search-card__row { gap: 8px; }
+.search-card__col { min-width: 0; }                 /* izinkan kolom flex mengecil */
+.search-card .static-field { min-width: 0; padding: 6px 8px; }
+.search-card .static-field .icon { flex: none; }
+.search-card .static-field__input {
+  flex: 1 1 0;
+  width: 100%;
+  min-width: 0;                                     /* input tanggal tidak lagi memaksa lebar bawaan */
+  font-size: 11px;
+}
+.search-card input[type="date"].static-field__input::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+  width: 14px;
+}
+
+/* =========================================================
+   Halaman Pasien (UC-01/02/03/05/06/07/13) – ikon & penyesuaian
+   ========================================================= */
+.icon--building { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='16' height='20' x='4' y='2' rx='2'/><path d='M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01'/></svg>"); }
+.icon--square-plus { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect width='18' height='18' x='3' y='3' rx='2'/><path d='M8 12h8M12 8v8'/></svg>"); }
+
+.page--form .notice, .page--bookings .notice, .page--status .notice { margin-top: 10px; }
+.page--form > .app-link { display: inline-flex; margin-top: 10px; }
+.page--bookings .booking-card { margin-top: 10px; }
+.page--bookings .data-empty { margin-top: 10px; }
+
+/* Kartu pilihan vaksin yang habis */
+.choice--disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Pemilih hari pada Ketersediaan Dokter */
+.day-select {
+  padding: 3px 8px; border-radius: 9999px; background: var(--c-field);
+  font: 700 10px/14px var(--font-ui); letter-spacing: 0.5px; color: var(--c-primary);
+}
+
+/* Form pencarian antrean: input nomor tidak melebar */
+.status-search__field { min-width: 0; }
+
+/* Teks "N Pasien di Depan" mengalir di bawah nomor antrean (tidak lagi menimpa) */
+.queue-ticket__ahead {
+  position: static;
+  display: block;
+  margin-top: 120px;
+  margin-right: 6px;
+  text-align: right;
+}
+
+/* Ikon tautan keluar (kartu daftar akun di halaman login) */
+.icon--external-link { --icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M15 3h6v6'/><path d='M10 14 21 3'/><path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6'/></svg>"); }
+.register-card__link .icon { --icon-size: 14px; }
+
+/* Sembunyikan ikon lihat-sandi bawaan Edge/IE; yang dipakai tombol mata milik halaman */
+.input--password::-ms-reveal,
+.input--password::-ms-clear { display: none; }
