@@ -6,7 +6,7 @@
 
 USE healthpoint;
 
--- Layanan 'Vaksinasi' wajib ada: dipakai Pendaftaran milik PendaftaranVaksinasi.
+-- Layanan Vaksinasi wajib ada: dipakai Pendaftaran milik PendaftaranVaksinasi.
 INSERT INTO Layanan (idLayanan, namaLayanan, deskripsi) VALUES
   (1, 'Poli Umum', 'Pemeriksaan dan konsultasi kesehatan umum'),
   (2, 'Vaksinasi', 'Layanan imunisasi');
@@ -15,7 +15,7 @@ INSERT INTO Dokter (idDokter, namaDokter) VALUES
   (1, 'dr. Nabila Maulidya'),
   (2, 'dr. Sunaryo Wijaya');
 
--- jamPraktik berformat DDL ('08.00-12.00'). Dokter 2 tidak tersedia pada hari Jumat.
+-- jamPraktik berformat DDL, contoh 08.00-12.00. Dokter 2 tidak tersedia pada hari Jumat.
 INSERT INTO JadwalDokter (idDokter, hari, jamPraktik, statusKetersediaan) VALUES
   (1, 'Senin',  '08.00-12.00', 'Tersedia'),
   (2, 'Senin',  '09.00-13.00', 'Tersedia'),
@@ -66,11 +66,10 @@ INSERT INTO WaktuPelayanan (idLayanan, rataRataWaktu, tanggal) VALUES
   (1, 12.00, CURDATE()),
   (1,  8.00, CURDATE());
 
--- Riwayat: pasien 1 punya 1 kunjungan selesai + 1 kunjungan aktif (diagnosis & tindakan '' karena NOT NULL = belum diperiksa).
+-- Riwayat: pasien 1 punya 1 kunjungan selesai dan 1 kunjungan aktif (diagnosis dan tindakan string kosong karena NOT NULL, artinya belum diperiksa).
 INSERT INTO RiwayatKunjungan (idPasien, idLayanan, tanggalKunjungan, keluhanUtama, tekananDarah, nadi, suhu, spo2, diagnosis, tindakan) VALUES
   (1, 1, '2026-08-10', 'Pusing',          '130/85', 80,   36.5, 98,   'Hipertensi ringan', 'Edukasi'),
-  (1, 1, CURDATE(),    'Demam 2 hari',    '120/80', 88,   38.1, 97,   '', ''),
-
+  (1, 1, CURDATE(),    'Demam 2 hari',    '120/80', 88,   38.1, 97,   '', '');
 
 INSERT INTO StokVaksin (idVaksin, jenisVaksin, tipeVaksin, jumlahStok, sisaKuota) VALUES
   (1, 'Influenza',   'Inaktif',    50, 50),
