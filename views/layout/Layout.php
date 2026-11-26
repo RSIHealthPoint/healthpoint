@@ -103,7 +103,7 @@ final class Layout
             // Kartu pendaftaran akun
             . '<section class="register-card" aria-label="Pendaftaran akun"><span class="register-card__icon"><span class="icon icon--user-check" aria-hidden="true"></span></span>'
             . '<div class="register-card__body"><h2 class="register-card__title">Belum memiliki akun?</h2>'
-            . '<a class="register-card__link" href="#">Daftar Akun Baru di sini <span class="icon icon--external-link" aria-hidden="true"></span></a></div></section>'
+            . '<a class="register-card__link" href="/daftar">Daftar Akun Baru di sini <span class="icon icon--external-link" aria-hidden="true"></span></a></div></section>'
             . '</div></main>'
                     . '<script>(function(){var b=document.getElementById("toggle-password"),i=document.getElementById("password");'
         . 'if(!b||!i){return;}'
@@ -115,6 +115,74 @@ final class Layout
         // mengetik lagi / kembali ke halaman: langsung tersembunyi
         . 'i.addEventListener("input",sembunyi);window.addEventListener("pageshow",sembunyi);})();</script>';
         return self::kerangka('Login', $aksi, $isi);
+    }
+
+        /**
+     * Halaman pembuatan akun pasien baru (tampilan mengikuti halaman login).
+     * @param array<string,string> $galat pesan galat per kolom (kunci 'umum' = pesan umum)
+     * @param array<string,string> $nilai isian sebelumnya (kata sandi tidak pernah diisi ulang)
+     */
+    public static function daftar(string $token, array $galat = [], array $nilai = []): string
+    {
+        $aksi = '<div class="app-header__actions"><button class="icon-button" type="button" aria-label="Notifikasi"><span class="icon icon--bell" aria-hidden="true"></span><span class="icon-button__dot" aria-hidden="true"></span></button>'
+            . '<span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span></div>';
+        $v = static fn (string $k): string => Boundary::h((string) ($nilai[$k] ?? ''));
+        $pesanGalat = static fn (string $k): string => isset($galat[$k]) ? '<p class="field__error" id="galat-' . $k . '">' . Boundary::h($galat[$k]) . '</p>' : '';
+        $atrGalat = static fn (string $k): string => isset($galat[$k]) ? ' aria-invalid="true" aria-describedby="galat-' . $k . '"' : '';
+        $kelasGalat = static fn (string $k): string => isset($galat[$k]) ? ' input--invalid' : '';
+
+        // Kolom isian teks biasa: label + ikon + input
+        $kolom = static function (string $k, string $label, string $ikon, string $atribut) use ($v, $pesanGalat, $atrGalat, $kelasGalat): string {
+            return '<div class="field"><div class="field__row"><label class="field__label" for="' . $k . '">' . $label . '</label></div>'
+                . '<div class="input-wrap"><input class="input' . $kelasGalat($k) . '" id="' . $k . '" name="' . $k . '" value="' . $v($k) . '" ' . $atribut . $atrGalat($k) . '>'
+                . '<span class="input-wrap__icon icon icon--' . $ikon . '" aria-hidden="true"></span></div>' . $pesanGalat($k) . '</div>';
+        };
+        // Kolom kata sandi: tidak pernah diisi ulang + tombol lihat/sembunyi
+        $sandi = static function (string $k, string $label, string $auto) use ($pesanGalat, $atrGalat, $kelasGalat): string {
+            return '<div class="field"><div class="field__row"><label class="field__label" for="' . $k . '">' . $label . '</label></div>'
+                . '<div class="input-wrap"><input class="input input--password' . $kelasGalat($k) . '" id="' . $k . '" name="' . $k . '" type="password" autocomplete="' . $auto . '" required' . $atrGalat($k) . '>'
+                . '<span class="input-wrap__icon icon icon--lock" aria-hidden="true"></span>'
+                . '<button class="input-wrap__toggle" type="button" data-toggle="' . $k . '" aria-label="Lihat kata sandi"><span class="icon icon--eye" aria-hidden="true"></span></button></div>' . $pesanGalat($k) . '</div>';
+        };
+
+        $jk = '';
+        foreach (['Laki-laki', 'Perempuan'] as $i => $opsi) {
+            $jk .= '<label class="toggle-chip"><input class="toggle-chip__input" type="radio" name="jenisKelamin" value="' . $opsi . '"' . (($nilai['jenisKelamin'] ?? '') === $opsi ? ' checked' : '') . ($i === 0 ? ' required' : '') . '>'
+                . '<span class="toggle-chip__body">' . $opsi . '</span></label>';
+        }
+
+        $umum = '';
+        if (isset($galat['umum'])) {
+            $umum = '<div class="notice notice--galat login__error" role="alert">' . Boundary::h($galat['umum']) . '</div>';
+        } elseif ($galat !== []) {
+            $umum = '<div class="notice notice--galat login__error" role="alert">Periksa kembali data yang Anda isi.</div>';
+        }
+
+        $isi = '<main class="page page--login"><div class="login"><div class="login__aura" aria-hidden="true"></div><h1 class="login__title">Daftar Akun</h1>'
+            . '<form class="login__form" action="/daftar" method="post" novalidate><input type="hidden" name="_token" value="' . Boundary::h($token) . '">'
+            . '<div class="login-card"><div class="form-stack">'
+            . $kolom('nama', 'Nama Lengkap', 'user', 'type="text" autocomplete="name" maxlength="100" autofocus required')
+            . $kolom('tanggalLahir', 'Tanggal Lahir', 'calendar', 'type="date" min="1900-01-01" max="' . Boundary::h(Waktu::hariIni()) . '" autocomplete="bday" required')
+            . '<fieldset class="field"><legend class="field__label">Jenis Kelamin</legend><div class="chip-row">' . $jk . '</div>' . $pesanGalat('jenisKelamin') . '</fieldset>'
+            . $kolom('noTelepon', 'No. Telepon', 'phone', 'type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="081234567890" required')
+            . '<div class="field"><div class="field__row"><label class="field__label" for="alamat">Alamat</label></div>'
+            . '<div class="input-wrap input-wrap--top"><textarea class="input input--textarea' . $kelasGalat('alamat') . '" id="alamat" name="alamat" rows="3" maxlength="255" autocomplete="street-address" required' . $atrGalat('alamat') . '>' . $v('alamat') . '</textarea>'
+            . '<span class="input-wrap__icon icon icon--map-pin" aria-hidden="true"></span></div>' . $pesanGalat('alamat') . '</div>'
+            . $kolom('username', 'Email/Username', 'id-card', 'type="text" autocomplete="username" maxlength="50" required')
+            . $sandi('password', 'Kata Sandi', 'new-password')
+            . $sandi('konfirmasi', 'Ulangi Kata Sandi', 'new-password')
+            . '<div class="form-actions"><button class="btn btn--login" type="submit"><span class="icon icon--user-plus" aria-hidden="true"></span> Buat Akun</button></div>'
+            . '</div></div></form>' . $umum
+            . '<section class="register-card" aria-label="Sudah punya akun"><span class="register-card__icon"><span class="icon icon--user-check" aria-hidden="true"></span></span>'
+            . '<div class="register-card__body"><h2 class="register-card__title">Sudah memiliki akun?</h2>'
+            . '<a class="register-card__link" href="/login">Masuk di sini <span class="icon icon--arrow-right" aria-hidden="true"></span></a></div></section>'
+            . '</div></main>'
+            . '<script>(function(){document.querySelectorAll("[data-toggle]").forEach(function(b){var i=document.getElementById(b.getAttribute("data-toggle"));if(!i){return;}'
+            . 'function sembunyi(){i.type="password";b.setAttribute("aria-pressed","false");b.setAttribute("aria-label","Lihat kata sandi");}'
+            . 'b.addEventListener("click",function(){var tampak=i.type==="password";i.type=tampak?"text":"password";b.setAttribute("aria-pressed",tampak?"true":"false");'
+            . 'b.setAttribute("aria-label",tampak?"Sembunyikan kata sandi":"Lihat kata sandi");});'
+            . 'i.addEventListener("input",sembunyi);window.addEventListener("pageshow",sembunyi);});})();</script>';
+        return self::kerangka('Daftar Akun', $aksi, $isi);
     }
 
     private static function kerangka(string $judul, string $aksiHeader, string $badan, string $subjudul = ''): string

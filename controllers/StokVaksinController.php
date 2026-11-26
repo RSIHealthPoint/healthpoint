@@ -35,7 +35,7 @@ final class StokVaksinController extends Controller
     public function hitungProyeksiKuota(int $idVaksin, int $jumlah): int
     {
         Jejak::catat('SEQ-12', '10', 'StokVaksinController', 'StokVaksin', 'getJumlahStok(idVaksin)');
-        $stokSaatIni = (new StokVaksin($this->db))->getJumlahStok($idVaksin);
+        $stokSaatIni = (new StokVaksin($this->db))->getSisaKuotaVaksin($idVaksin);
         Jejak::catat('SEQ-12', '11', 'StokVaksin', 'StokVaksinController', 'return stokSaatIni');
         Jejak::catat('SEQ-12', '12', 'StokVaksinController', 'FormStokVaksin', 'return proyeksiKuota');
         return $stokSaatIni + $jumlah;

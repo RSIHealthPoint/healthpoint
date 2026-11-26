@@ -58,6 +58,7 @@ final class Router
     {
         $pengguna = Auth::pengguna();
         if ($r->path === '/login') { return self::login($r, $db); }
+        if ($r->path === '/daftar') { return self::daftar($r, $db); }
         if ($r->path === '/logout') { Auth::keluar(); return [302, '', '/login']; }
         if ($pengguna === null) { return [302, '', '/login']; }
         if ($r->path === '/') { return [200, Layout::beranda($pengguna, self::ringkasanBeranda($pengguna, $db)), null]; }
@@ -116,6 +117,27 @@ final class Router
         return [200, Layout::login(Sesi::token(), $galat), null];
     }
 
+        /** Halaman pembuatan akun pasien baru. Setelah berhasil, pengguna langsung masuk. @return array{0:int,1:string,2:?string} */
+    private static function daftar(Request $r, Database $db): array
+    {
+        if (Auth::pengguna() !== null) { return [302, '', '/']; }
+        $nilai = [];
+        $galat = [];
+        if ($r->adaPost()) {
+            if (!Sesi::tokenValid($r->ambil('_token'))) {
+                return [400, Layout::daftar(Sesi::token(), ['umum' => 'Token tidak valid. Muat ulang halaman lalu coba lagi.']), null];
+            }
+            foreach (['nama', 'tanggalLahir', 'jenisKelamin', 'noTelepon', 'alamat', 'username'] as $k) { $nilai[$k] = $r->ambil($k); }
+            $sandi = $r->ambil('password');
+            $galat = Auth::daftarPasien($db, $nilai + ['password' => $sandi, 'konfirmasi' => $r->ambil('konfirmasi')]);
+            if ($galat === []) {
+                Auth::masuk($db, $nilai['username'], $sandi);
+                return [302, '', '/'];
+            }
+        }
+        return [200, Layout::daftar(Sesi::token(), $galat, $nilai), null];
+    }
+    
     /** Ringkasan dashboard: antrean menunggu hari ini per layanan (+ nama pasien). @return array<string,mixed> */
     private static function ringkasanBeranda(array $pengguna, Database $db): array
     {

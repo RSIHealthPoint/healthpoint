@@ -59,11 +59,11 @@ final class StokVaksin extends Model
         return $jumlah > 0;
     }
 
-    /** SEQ-12 pesan 20: menambah stok dan kuota; mengembalikan stok terbaru. */
+    /** SEQ-12 pesan 20: menambah stok dan kuota; mengembalikan stok (kuota) terbaru. */
     public function updateStok(int $idVaksin, int $jumlah): int
     {
         $this->db->jalankan('UPDATE StokVaksin SET jumlahStok = jumlahStok + ?, sisaKuota = sisaKuota + ? WHERE idVaksin = ?', [$jumlah, $jumlah, $idVaksin]);
-        return $this->getJumlahStok($idVaksin);
+        return $this->getSisaKuotaVaksin($idVaksin);
     }
 
     /** SEQ-13 pesan 4. $tanggal dipertahankan untuk kesesuaian tanda tangan; kuota berlaku global. @return list<self> */
@@ -98,5 +98,20 @@ final class StokVaksin extends Model
     {
         return ['idVaksin' => $this->idVaksin, 'jenisVaksin' => $this->jenisVaksin, 'tipeVaksin' => $this->tipeVaksin,
                 'jumlahStok' => $this->jumlahStok, 'sisaKuota' => $this->sisaKuota, 'status' => $this->sisaKuota > 0 ? 'Tersedia' : 'Habis'];
+    }
+
+    /** Stok/kuota vaksin saat ini (sama dengan "Sisa Kuota" yang dilihat pasien). */
+    public function getSisaKuotaVaksin(int $idVaksin): int
+    {
+        return (int) ($this->db->ambilNilai('SELECT sisaKuota FROM StokVaksin WHERE idVaksin = ?', [$idVaksin]) ?? 0);
+    }
+    /** Pembatalan booking vaksinasi: kembalikan 1 dosis ke kuota dan hapus 1 catatan pemakaian pada tanggal itu. */
+    public function kembalikanKuota(int $idVaksin, string $tanggal): void
+    {
+        $this->db->jalankan('UPDATE StokVaksin SET sisaKuota = sisaKuota + 1 WHERE idVaksin = ?', [$idVaksin]);
+        $this->db->jalankan(
+            'DELETE FROM PemakaianVaksin WHERE idPemakaian = (SELECT m FROM (SELECT MAX(idPemakaian) AS m FROM PemakaianVaksin WHERE idVaksin = ? AND tanggalPemakaian = ?) t)',
+            [$idVaksin, $tanggal]
+        );
     }
 }

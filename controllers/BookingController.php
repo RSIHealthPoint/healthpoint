@@ -14,6 +14,8 @@ use HealthPoint\Core\Jejak;
 use HealthPoint\Models\Booking;
 use HealthPoint\Models\Model;
 use HealthPoint\Models\Antrean;
+use HealthPoint\Models\Layanan;
+use HealthPoint\Models\StokVaksin;
 
 final class BookingController extends Controller
 {
@@ -59,6 +61,18 @@ final class BookingController extends Controller
             return $this->gagal('Booking tidak dapat dibatalkan');
         }
         (new Antrean($this->db))->hapusByBooking($idBooking);   // nomor antrean booking yang dibatalkan dilepas
+        // Booking vaksinasi dibatalkan: dosis kembali ke stok (halaman pengelola dan pasien ikut bertambah)
+        $dataBooking = $milik->toArray();
+        if ((int) $dataBooking['idLayanan'] === (new Layanan($this->db))->getIdVaksinasi()) {
+            $v = $this->db->ambilSatu(
+                'SELECT pv.idVaksin FROM PendaftaranVaksinasi pv JOIN Pendaftaran p ON p.idPendaftaran = pv.idPendaftaran
+                WHERE p.idPasien = ? AND p.tanggalDaftar = ? ORDER BY p.idPendaftaran DESC LIMIT 1',
+                [$milik->getIdPasien(), $dataBooking['tanggalKunjungan']]
+            );
+            if ($v !== null) {
+                (new StokVaksin($this->db))->kembalikanKuota((int) $v['idVaksin'], (string) $dataBooking['tanggalKunjungan']);
+            }
+        }
         Jejak::catat('SEQ-03', '9', 'BookingController', 'HalamanBookingSaya', 'return notifikasiBerhasil');
         $n = 'Booking berhasil dibatalkan';
         $this->halaman->tampilkanNotifikasi($n, true);

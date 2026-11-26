@@ -38,7 +38,7 @@ final class FormStokVaksin extends Boundary
         Jejak::catat('SEQ-12', $no, 'FormStokVaksin', 'Pengelola Klinik', $no === '6' ? 'tampilkanDaftarStokVaksin(daftarVaksin)' : 'tampilkanDaftarStokTerbaru(stokTerbaru)');
         $this->layar = array_values(array_filter($this->layar, static fn (array $l): bool => $l['jenis'] !== 'tabel'));
         $this->tampil('tabel', ['judul' => 'Stok vaksin', 'baris' => array_map(static fn (array $v): array => [
-            'id' => $v['idVaksin'], 'nama' => $v['jenisVaksin'], 'tipe' => $v['tipeVaksin'], 'stok' => $v['jumlahStok'], 'sisaKuota' => $v['sisaKuota'], 'status' => $v['status']], $daftarVaksin)]);
+            'id' => $v['idVaksin'], 'nama' => $v['jenisVaksin'], 'tipe' => $v['tipeVaksin'], 'stok' => $v['sisaKuota'], 'sisaKuota' => $v['sisaKuota'], 'status' => $v['status']], $daftarVaksin)]);
     }
 
     public function pilihVaksin(int $idVaksin): void
