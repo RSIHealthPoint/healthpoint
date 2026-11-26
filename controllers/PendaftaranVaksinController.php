@@ -16,6 +16,8 @@ use HealthPoint\Models\Model;
 use HealthPoint\Models\PemakaianVaksin;
 use HealthPoint\Models\PendaftaranVaksinasi;
 use HealthPoint\Models\StokVaksin;
+use HealthPoint\Models\Antrean;
+use HealthPoint\Models\Booking;
 
 final class PendaftaranVaksinController extends Controller
 {
@@ -39,6 +41,9 @@ final class PendaftaranVaksinController extends Controller
     public function simpanPendaftaran(int $idPasien, string $tanggal, int $idVaksin): int|string
     {
         $stok = new StokVaksin($this->db);
+        if ((new Booking($this->db))->validasiTanggalBooking($tanggal, false) !== null) {
+            return $this->habis('Pendaftaran vaksinasi hanya dapat dilakukan paling lambat H-1 sebelum tanggal kunjungan.');
+        }
         if (!Waktu::tanggalValid($tanggal) || $tanggal < Waktu::hariIni() || !$stok->ada($idVaksin) || $idPasien <= 0) {
             return $this->habis('Data pendaftaran tidak valid.');
         }
@@ -56,7 +61,11 @@ final class PendaftaranVaksinController extends Controller
             $tersimpan = (new PendaftaranVaksinasi($this->db))->simpanPendaftaran($idPasien, $tanggal, $idVaksin);
             Jejak::catat('SEQ-13', '16', 'PendaftaranVaksinasi', 'PendaftaranVaksinController', 'return statusTersimpan');
             Jejak::catat('SEQ-13', '17', 'PendaftaranVaksinController', 'StokVaksin', 'kurangiKuota(idVaksin)');
-            $sisa = $tersimpan ? $stok->kurangiKuota($idVaksin) : -1;
+            $idVaksinasi = (new Layanan($this->db))->getIdVaksinasi();
+            $okBooking = $tersimpan && $idVaksinasi !== null
+                && (new Booking($this->db))->simpanBookingLayanan($idPasien, $tanggal, $idVaksinasi);
+            $okAntrean = $okBooking && (new Antrean($this->db))->buatUntukBooking($this->db->idTerakhir(), $tanggal) !== null;
+            $sisa = $okAntrean ? $stok->kurangiKuota($idVaksin) : -1;
             Jejak::catat('SEQ-13', '18', 'StokVaksin', 'PendaftaranVaksinController', 'return sisaKuota');
             if ($sisa < 0 || !(new PemakaianVaksin($this->db))->catatPemakaian($idVaksin, $tanggal, 1)) {
                 $this->db->rollback();                    // kuota diambil pendaftar lain di saat bersamaan

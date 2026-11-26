@@ -21,6 +21,10 @@ final class Booking extends Model
     public const BATAS_JAM_PEMBATALAN = 2;
     /** Kapasitas booking per (tanggal, layanan, jam) untuk cekKetersediaanJadwal. */
     public const KAPASITAS_PER_JAM = 4;
+    /** Booking reguler paling lambat H-1: tanggal kunjungan minimal N hari setelah hari ini. */
+    public const MIN_HARI_BOOKING = 1;
+    /** 0 = tanpa batas atas; isi 1 bila booking hanya boleh untuk besok saja (tepat H-1). */
+    public const MAKS_HARI_BOOKING = 0;
 
     private int $idBooking = 0;
     private int $idPasien = 0;
@@ -138,5 +142,37 @@ final class Booking extends Model
     {
         return ['idBooking' => $this->idBooking, 'idPasien' => $this->idPasien, 'tanggalKunjungan' => $this->tanggalKunjungan,
                 'status' => $this->status, 'idLayanan' => $this->idLayanan, 'jamKontrol' => $this->jamKontrol, 'jenisBooking' => $this->jenisBooking];
+    }
+
+    public static function tanggalMinimal(): string
+    {
+        return (new DateTimeImmutable(Waktu::hariIni()))->modify('+' . self::MIN_HARI_BOOKING . ' day')->format('Y-m-d');
+    }
+
+    public static function tanggalMaksimal(): ?string
+    {
+        return self::MAKS_HARI_BOOKING > 0
+            ? (new DateTimeImmutable(Waktu::hariIni()))->modify('+' . self::MAKS_HARI_BOOKING . ' day')->format('Y-m-d')
+            : null;
+    }
+
+    /**
+     * Aturan tanggal booking: minimal H-1 (dan maksimal bila dibatasi), serta ada jadwal dokter Tersedia pada hari itu bila $perluDokter.
+     * @return string|null pesan galat; null bila tanggal boleh dibooking
+     */
+    public function validasiTanggalBooking(string $tanggal, bool $perluDokter = true): ?string
+    {
+        if (!Waktu::tanggalValid($tanggal)) { return 'Tanggal booking tidak valid.'; }
+        $maks = self::tanggalMaksimal();
+        if ($tanggal < self::tanggalMinimal() || ($maks !== null && $tanggal > $maks)) {
+            return 'Booking hanya dapat dilakukan paling lambat H-1 sebelum tanggal kunjungan.';
+        }
+        if ($perluDokter && (int) $this->db->ambilNilai(
+            "SELECT COUNT(*) FROM JadwalDokter WHERE hari = ? AND statusKetersediaan = 'Tersedia'",
+            [Waktu::namaHari($tanggal)]
+        ) === 0) {
+            return 'Tidak ada jadwal dokter yang tersedia pada tanggal tersebut.';
+        }
+        return null;
     }
 }

@@ -11,6 +11,7 @@ use HealthPoint\Controllers\PendaftaranController;
 use HealthPoint\Core\Jejak;
 use HealthPoint\Core\Waktu;
 use HealthPoint\Core\Sesi;
+use HealthPoint\Models\Booking;
 
 final class FormBookingLayanan extends Boundary
 {
@@ -70,6 +71,7 @@ final class FormBookingLayanan extends Boundary
         match ($status) {
             'berhasil' => $this->informasiBerhasil(),
             'layanan_tidak_tersedia' => $this->tampilPesan('galat', 'Layanan yang dipilih tidak tersedia. Silakan pilih layanan lain.'),
+            'tanggal_tidak_tersedia' => $this->tampilPesan('galat', 'Tanggal booking tidak tersedia. Booking dilakukan paling lambat H-1 pada hari yang memiliki jadwal dokter tersedia.'),
             default => $this->tampilPesan('galat', 'Data pendaftaran tidak lengkap. Lengkapi data yang diperlukan.'),
         };
     }
@@ -96,7 +98,7 @@ final class FormBookingLayanan extends Boundary
      * Halaman UI-01: "Pendaftaran <Layanan>" + tanggal + kartu jadwal + keluhan.
      * @param list<array{dokter:string,jam:string,diambil:int,sisa:int}> $jadwal
      */
-    public function renderHalaman(int $idLayanan, string $tanggal, array $jadwal): string
+    public function renderHalaman(int $idLayanan, string $tanggal, array $jadwal, ?string $nomorBaru = null): string
     {
         $nama = 'Layanan';
         foreach ($this->daftarLayanan as $l) {
@@ -113,12 +115,19 @@ final class FormBookingLayanan extends Boundary
         if ($this->terakhir('status') === 'berhasil') {
             $o .= '<a class="app-link" href="/uc/02">Lihat booking saya</a>';
         }
-
+        if ($nomorBaru !== null) {
+            $o .= '<div class="queue-banner" role="status"><span class="queue-banner__label">Nomor antrean Anda</span>'
+                . '<span class="queue-banner__number">' . self::h($nomorBaru) . '</span>'
+                . ($tanggal === Waktu::hariIni() ? '<a class="app-link" href="/uc/05?nomor=' . rawurlencode($nomorBaru) . '">Cek status antrean</a>' : '<span class="queue-banner__hint">Status antrean dapat dicek pada hari kunjungan.</span>')
+                . '</div>';
+        }
         $o .= '<form class="booking-form" method="post" action="/uc/01">'
             . '<input type="hidden" name="_token" value="' . self::h(Sesi::token()) . '">'
             . '<input type="hidden" name="idLayanan" value="' . $idLayanan . '">'
             . '<div class="form-group"><label class="form-label" for="tanggal-booking">Pilih Tanggal Booking</label><div class="date-field">'
-            . '<input class="date-field__input" id="tanggal-booking" name="tanggal" type="date" min="' . self::h(Waktu::hariIni()) . '" value="' . self::h($tanggal) . '"'
+            . '<input class="date-field__input" id="tanggal-booking" name="tanggal" type="date" min="' . self::h(Booking::tanggalMinimal()) . '"'
+            . (Booking::tanggalMaksimal() !== null ? ' max="' . self::h((string) Booking::tanggalMaksimal()) . '"' : '')
+            . ' value="' . self::h($tanggal) . '"'
             . ' onchange="window.location.search=\'idLayanan=' . $idLayanan . '&amp;tanggal=\'+this.value">'
             . '<span class="date-field__icon icon icon--calendar" aria-hidden="true"></span></div></div>'
             . '<fieldset class="choice-group"><legend class="form-label">Pilih Jadwal</legend><div class="choice-list">';
@@ -138,6 +147,6 @@ final class FormBookingLayanan extends Boundary
 
         return $o . '</div></fieldset>'
             . '<div class="form-group form-group--keluhan"><textarea class="textarea" id="keluhan" name="keluhan" aria-label="Keluhan" placeholder="Tuliskan keluhan atau gejala yang dirasakan...">' . self::h($this->keluhan) . '</textarea></div>'
-            . '<button class="btn btn--form" type="submit">Simpan &amp; Konfirmasi Booking Layanan</button></form>';
+            . '<button class="btn btn--form" type="submit"' . ($jadwal === [] ? ' disabled' : '') . '>Simpan &amp; Konfirmasi Booking Layanan</button></form>'; 
     }
 }

@@ -13,6 +13,7 @@ use HealthPoint\Core\Jejak;
 use HealthPoint\Controllers\KontrolJadwalDokter;
 use HealthPoint\Core\Sesi;
 use HealthPoint\Core\TampilanPetugas;
+use HealthPoint\Core\Waktu;
 
 final class FormKelolaJadwalDokter extends Boundary
 {
@@ -90,7 +91,7 @@ final class FormKelolaJadwalDokter extends Boundary
     }
 
     /** Halaman UI-06: "Formulir Kelola Jadwal & Ketersediaan". */
-    public function renderHalaman(): string
+    public function renderHalaman(string $tanggal = ''): string
     {
         $o = '<h1 class="page-title">Formulir Kelola Jadwal &amp; Ketersediaan</h1>';
         foreach ($this->layar as $l) {
@@ -103,10 +104,7 @@ final class FormKelolaJadwalDokter extends Boundary
         foreach ($this->daftarDokter as $d) {
             $opsiDokter .= '<option value="' . (int) $d['idDokter'] . '"' . ((int) $d['idDokter'] === $this->idDokter ? ' selected' : '') . '>' . self::h($d['namaDokter']) . '</option>';
         }
-        $opsiHari = '<option value="">Pilih Hari...</option>';
-        foreach (KontrolJadwalDokter::HARI as $h) {
-            $opsiHari .= '<option value="' . $h . '"' . ($h === $this->hari ? ' selected' : '') . '>' . $h . '</option>';
-        }
+        $tanggal = Waktu::tanggalValid($tanggal) ? $tanggal : Waktu::hariIni();
 
         [$mulai, $selesai] = array_pad(explode('-', $this->jamPraktik, 2), 2, '');
         $mulai = preg_match('/^\d{2}:\d{2}$/', $mulai) === 1 ? $mulai : '08:00';
@@ -125,9 +123,9 @@ final class FormKelolaJadwalDokter extends Boundary
             . '<span class="mini-label mini-label--muted">Shift Aktif</span></div>'
             . '<div class="select-field"><select class="select-field__control" id="dokter-poli" name="idDokter">' . $opsiDokter . '</select>'
             . '<span class="select-field__icon icon icon--chevron-down" aria-hidden="true"></span></div></div>'
-            . '<div class="field-group field-group--wide"><label class="mini-label" for="hari-praktik">Hari Praktik:</label>'
+            . '<div class="field-group field-group--wide"><label class="mini-label" for="tanggal-praktik">Tanggal Praktik:</label>'
             . '<div class="chip-row"><div class="select-chip">' . self::ikon('calendar')
-            . '<select class="select-chip__control" id="hari-praktik" name="hari" required>' . $opsiHari . '</select></div></div></div>'
+            . '<input class="select-chip__control" id="tanggal-praktik" name="tanggal" type="date" min="' . self::h(Waktu::hariIni()) . '" value="' . self::h($tanggal) . '" required></div></div></div>'
             . '<div class="field-group"><span class="mini-label">Jam Praktik &amp; Kuota:</span><div class="time-row">'
             . '<div class="time-field"><label class="mini-label mini-label--muted" for="jam-mulai">Jam Mulai:</label><input class="time-field__input" id="jam-mulai" name="jamMulai" type="time" value="' . self::h($mulai) . '"></div>'
             . '<div class="time-field"><label class="mini-label mini-label--muted" for="jam-selesai">Jam Selesai:</label><input class="time-field__input" id="jam-selesai" name="jamSelesai" type="time" value="' . self::h($selesai) . '"></div>'

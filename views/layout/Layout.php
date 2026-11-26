@@ -30,7 +30,7 @@ final class Layout
                 . '<span class="avatar-chip" role="img" aria-label="Profil"><span class="icon icon--user" aria-hidden="true"></span></span></div>';
             $nav = '<nav class="bottom-nav" aria-label="Navigasi utama"><div class="bottom-nav__inner">'
                 . '<a class="bottom-nav__link" href="/"><span class="icon icon--dashboard" aria-hidden="true"></span><span class="bottom-nav__label">Dashboard</span></a>'
-                . '<a class="bottom-nav__link bottom-nav__link--compact" href="/logout"><span class="icon icon--user" aria-hidden="true"></span><span class="bottom-nav__label">Profil</span></a>'
+                . '<a class="bottom-nav__link bottom-nav__link--compact" href="/logout"><span class="icon icon--logout" aria-hidden="true"></span><span class="bottom-nav__label">Keluar</span></a>'
                 . '</div></nav>';
         } elseif ($pengguna !== null) {
             $aksi = '<div class="app-header__user"><span>' . Boundary::h($pengguna['username']) . ' <small>' . Boundary::h($pengguna['role']) . '</small></span>'
@@ -105,8 +105,15 @@ final class Layout
             . '<div class="register-card__body"><h2 class="register-card__title">Belum memiliki akun?</h2>'
             . '<a class="register-card__link" href="#">Daftar Akun Baru di sini <span class="icon icon--external-link" aria-hidden="true"></span></a></div></section>'
             . '</div></main>'
-            . '<script>(function(){var b=document.getElementById("toggle-password"),i=document.getElementById("password");'
-            . 'if(!b||!i){return;}b.addEventListener("click",function(){i.type=i.type==="password"?"text":"password";});})();</script>';
+                    . '<script>(function(){var b=document.getElementById("toggle-password"),i=document.getElementById("password");'
+        . 'if(!b||!i){return;}'
+        . 'function sembunyi(){if(i.type!=="password"){i.type="password";}b.setAttribute("aria-pressed","false");b.setAttribute("aria-label","Lihat kata sandi");}'
+        . 'sembunyi();'
+        // klik ikon mata: tampilkan / sembunyikan sementara
+        . 'b.addEventListener("click",function(){var tampak=i.type==="password";i.type=tampak?"text":"password";'
+        . 'b.setAttribute("aria-pressed",tampak?"true":"false");b.setAttribute("aria-label",tampak?"Sembunyikan kata sandi":"Lihat kata sandi");});'
+        // mengetik lagi / kembali ke halaman: langsung tersembunyi
+        . 'i.addEventListener("input",sembunyi);window.addEventListener("pageshow",sembunyi);})();</script>';
         return self::kerangka('Login', $aksi, $isi);
     }
 
@@ -204,8 +211,7 @@ final class Layout
             $ikon = $vaksin ? 'syringe' : (str_contains($n, 'gigi') ? 'tooth' : 'stethoscope');
             $href = $vaksin ? '/uc/13' : '/uc/01?idLayanan=' . (int) $l['idLayanan'];
             $kartu .= '<a class="service-card" href="' . $href . '"><span class="service-card__icon"><span class="icon icon--' . $ikon . '" aria-hidden="true"></span></span>'
-                . '<span class="service-card__body' . ($vaksin ? ' service-card__body--center' : '') . '"><span class="service-card__title">' . Boundary::h($l['namaLayanan']) . '</span>'
-                . ($vaksin ? '' : '<span class="service-card__meta">Antrean: ' . (int) $l['menunggu'] . '</span>') . '</span>'
+                . '<span class="service-card__body service-card__body--center"><span class="service-card__title">' . Boundary::h($l['namaLayanan']) . '</span></span>'
                 . '<span class="service-card__aside"><span class="status-pill">Buka</span><span class="round-action"><span class="icon icon--arrow-right" aria-hidden="true"></span></span></span></a>';
         }
 

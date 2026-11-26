@@ -43,6 +43,6 @@ final class Uc03BatalkanBooking extends Flow
             $halaman->konfirmasiPembatalan();
         }
         $halaman->bukaMenuBookingSaya();
-        return $halaman->renderHalaman($this->petaLayanan());
+        return $halaman->renderHalaman($this->petaLayanan(), $this->petaNomorAntrean((int) ($this->pengguna['idPasien'] ?? 0)));
     }
 }

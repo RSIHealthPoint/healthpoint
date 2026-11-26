@@ -11,6 +11,7 @@ use HealthPoint\Controllers\PendaftaranVaksinController;
 use HealthPoint\Core\Jejak;
 use HealthPoint\Core\Waktu;
 use HealthPoint\Core\Sesi;
+use HealthPoint\Models\Booking;
 
 final class FormPendaftaranVaksin extends Boundary
 {
@@ -104,7 +105,9 @@ final class FormPendaftaranVaksin extends Boundary
         $o .= '<form class="booking-form" method="post" action="/uc/13">'
             . '<input type="hidden" name="_token" value="' . self::h(Sesi::token()) . '">'
             . '<div class="form-group"><label class="form-label" for="tanggal-daftar">Pilih Tanggal Booking</label><div class="date-field">'
-            . '<input class="date-field__input" id="tanggal-daftar" name="tanggal" type="date" min="' . self::h(Waktu::hariIni()) . '" value="' . self::h($tanggal) . '"'
+            . '<input class="date-field__input" id="tanggal-daftar" name="tanggal" type="date" min="' . self::h(Booking::tanggalMinimal()) . '"'
+            . (Booking::tanggalMaksimal() !== null ? ' max="' . self::h((string) Booking::tanggalMaksimal()) . '"' : '')
+            . ' value="' . self::h($tanggal) . '"'
             . ' onchange="window.location.search=\'tanggal=\'+this.value">'
             . '<span class="date-field__icon icon icon--calendar" aria-hidden="true"></span></div></div>'
             . '<fieldset class="choice-group"><legend class="form-label">Pilih Jadwal</legend><div class="choice-list">';

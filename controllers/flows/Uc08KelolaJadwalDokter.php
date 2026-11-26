@@ -14,6 +14,7 @@ namespace HealthPoint\Flows;
 use HealthPoint\Boundaries\FormKelolaJadwalDokter;
 use HealthPoint\Controllers\KontrolKelolaJadwal;
 use HealthPoint\Core\Request;
+use HealthPoint\Core\Waktu;
 
 final class Uc08KelolaJadwalDokter extends Flow
 {
@@ -72,10 +73,12 @@ final class Uc08KelolaJadwalDokter extends Flow
         $f = $this->susun();
         $f->bukaMenuKelolaJadwal();
         if ($r->adaPost()) {
-            $f->pilihDokterDanHari((int) $r->ambil('idDokter'), $r->ambil('hari'));
-            $f->isiJadwal($r->ambil('jamMulai') . '-' . $r->ambil('jamSelesai'), $r->ambil('status'));
+            $tanggal = $r->ambil('tanggal');
+        $hari = Waktu::tanggalValid($tanggal) ? Waktu::namaHari($tanggal) : '';   // tanggal -> nama hari (kolom JadwalDokter.hari)
+        $f->pilihDokterDanHari((int) $r->ambil('idDokter'), $hari);
+        $f->isiJadwal($r->ambil('jamMulai') . '-' . $r->ambil('jamSelesai'), $r->ambil('status'));
             $f->klikSimpan();
         }
-        return $f->renderHalaman();
+        return $f->renderHalaman($r->adaPost() ? $r->ambil('tanggal') : '');
     }
 }

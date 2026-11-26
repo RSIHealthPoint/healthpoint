@@ -16,6 +16,7 @@ use HealthPoint\Controllers\PendaftaranController;
 use HealthPoint\Core\Request;
 use HealthPoint\Core\Waktu;
 use HealthPoint\Models\Layanan;
+use HealthPoint\Models\Booking;
 
 final class Uc01DaftarLayanan extends Flow
 {
@@ -77,18 +78,34 @@ final class Uc01DaftarLayanan extends Flow
         $form = $this->susun();
         $form->pilihMenuPendaftaran();
 
+        $idPasien = (int) ($this->pengguna['idPasien'] ?? 0);
         $idLayanan = (int) $r->ambil('idLayanan');
         if ($idLayanan === 0) {
             $l = new Layanan($this->db);
             $idLayanan = $l->getIdByNama('Poli Umum') ?? $l->getIdPertama() ?? 0;
         }
         $tanggal = $r->ambil('tanggal');
+        $nomorBaru = null;
         if ($r->adaPost()) {
+            $sebelum = $this->nomorAntreanTerbaru($idPasien, $tanggal);
             $form->masukkanDataPasien($this->idPasienLogin(), $tanggal, $r->ambil('keluhan'));
             $form->pilihLayanan($idLayanan);
             $form->konfirmasiPendaftaran();
+            $sesudah = $this->nomorAntreanTerbaru($idPasien, $tanggal);
+            $nomorBaru = $sesudah !== $sebelum ? $sesudah : null;   // berubah = booking baru berhasil dibuat
         }
-        $tanggal = $tanggal !== '' ? $tanggal : Waktu::hariIni();
-        return $form->renderHalaman($idLayanan, $tanggal, $this->jadwalBooking($idLayanan, $tanggal));
+        $tanggal = $tanggal !== '' ? $tanggal : $this->tanggalBawaan();
+        return $form->renderHalaman($idLayanan, $tanggal, $this->jadwalBooking($idLayanan, $tanggal), $nomorBaru);
+    }
+    /** Tanggal awal formulir: hari terdekat (mulai H-1) yang punya jadwal dokter tersedia. */
+    private function tanggalBawaan(): string
+    {
+        $booking = new Booking($this->db);
+        $t = Booking::tanggalMinimal();
+        for ($i = 0; $i < 14; $i++) {
+            if ($booking->validasiTanggalBooking($t) === null) { return $t; }
+            $t = (new \DateTimeImmutable($t))->modify('+1 day')->format('Y-m-d');
+        }
+        return Booking::tanggalMinimal();
     }
 }

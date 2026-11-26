@@ -15,6 +15,7 @@ use HealthPoint\Boundaries\FormPendaftaranVaksin;
 use HealthPoint\Controllers\PendaftaranVaksinController;
 use HealthPoint\Core\Request;
 use HealthPoint\Core\Waktu;
+use HealthPoint\Models\Booking;
 
 final class Uc13DaftarVaksinasi extends Flow
 {
@@ -47,13 +48,18 @@ final class Uc13DaftarVaksinasi extends Flow
         $this->mulai();
         $f = $this->susun();
         $f->bukaFormPendaftaran();
-        $tanggal = $r->ambil('tanggal') !== '' ? $r->ambil('tanggal') : Waktu::hariIni();
+        $tanggal = $r->ambil('tanggal') !== '' ? $r->ambil('tanggal') : Booking::tanggalMinimal();
         $f->pilihTanggalBooking($tanggal);
+        $nomorBaru = null;
         if ($r->adaPost()) {
+            $idPasien = (int) ($this->pengguna['idPasien'] ?? 0);
+            $sebelum = $this->nomorAntreanTerbaru($idPasien, $tanggal);
             $f->pilihJenisVaksin((int) $r->ambil('idVaksin'));
             $f->klikSimpanPendaftaran();
             $f->pilihTanggalBooking($tanggal);   // muat ulang daftar agar sisa kuota terbaru tampil
+            $sesudah = $this->nomorAntreanTerbaru($idPasien, $tanggal);
+            $nomorBaru = $sesudah !== $sebelum ? $sesudah : null;
         }
-        return $f->renderHalaman($tanggal);
+        return $f->renderHalaman($tanggal, $nomorBaru);
     }
 }

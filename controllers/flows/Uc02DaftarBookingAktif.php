@@ -38,6 +38,6 @@ final class Uc02DaftarBookingAktif extends Flow
         $halaman = new HalamanBookingSaya();
         new BookingController($halaman, $this->db, $this->idPasienLogin());
         $halaman->bukaMenuBookingSaya();
-        return $halaman->renderHalaman($this->petaLayanan());
+        return $halaman->renderHalaman($this->petaLayanan(), $this->petaNomorAntrean((int) ($this->pengguna['idPasien'] ?? 0)));
     }
 }

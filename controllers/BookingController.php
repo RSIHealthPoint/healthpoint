@@ -13,6 +13,7 @@ use HealthPoint\Core\Database;
 use HealthPoint\Core\Jejak;
 use HealthPoint\Models\Booking;
 use HealthPoint\Models\Model;
+use HealthPoint\Models\Antrean;
 
 final class BookingController extends Controller
 {
@@ -57,6 +58,7 @@ final class BookingController extends Controller
         if (!$tersimpan) {
             return $this->gagal('Booking tidak dapat dibatalkan');
         }
+        (new Antrean($this->db))->hapusByBooking($idBooking);   // nomor antrean booking yang dibatalkan dilepas
         Jejak::catat('SEQ-03', '9', 'BookingController', 'HalamanBookingSaya', 'return notifikasiBerhasil');
         $n = 'Booking berhasil dibatalkan';
         $this->halaman->tampilkanNotifikasi($n, true);

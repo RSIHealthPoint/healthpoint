@@ -16,6 +16,7 @@ use HealthPoint\Models\DataPasien;
 use HealthPoint\Models\Layanan;
 use HealthPoint\Models\Model;
 use HealthPoint\Models\Pendaftaran;
+use HealthPoint\Models\Antrean;
 
 final class PendaftaranController extends Controller
 {
@@ -40,6 +41,9 @@ final class PendaftaranController extends Controller
         if ($pasien === null || !$pasien->lengkap() || !Waktu::tanggalValid($tanggal) || $tanggal < Waktu::hariIni()) {
             return $this->kirimStatus('data_tidak_lengkap');                       // ACT-01 alt: data tidak lengkap
         }
+        if ((new Booking($this->db))->validasiTanggalBooking($tanggal) !== null) {
+            return $this->kirimStatus('tanggal_tidak_tersedia');   // bukan H-1 / tidak ada dokter tersedia
+        }
         $layanan = (new Layanan($this->db))->getById($idLayanan);
         if ($layanan === null || !$layanan->isTersedia()) {
             return $this->kirimStatus('layanan_tidak_tersedia');                   // ACT-01 alt: layanan tidak tersedia
@@ -49,6 +53,10 @@ final class PendaftaranController extends Controller
         try {
             $ok = (new Pendaftaran($this->db))->simpanPendaftaran($idPasien, $tanggal, $idLayanan)
                 && (new Booking($this->db))->simpanBookingLayanan($idPasien, $tanggal, $idLayanan);
+            if ($ok) {
+                // booking baru langsung mendapat nomor antrean (urut per hari kunjungan)
+                $ok = (new Antrean($this->db))->buatUntukBooking($this->db->idTerakhir(), $tanggal) !== null;
+            }
             $ok ? $this->db->commit() : $this->db->rollback();
         } catch (\Throwable $e) {
             $this->db->rollback();

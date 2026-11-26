@@ -91,7 +91,8 @@ final class Router
             return [200, Layout::halaman($isi, $pengguna, $judul), null];
         } catch (\Throwable $e) {
             error_log('[HealthPoint] ' . $e::class . ': ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
-            return [500, self::pesanHalaman('Terjadi kesalahan', 'Permintaan tidak dapat diproses. Silakan coba lagi; jika berulang, hubungi pengelola sistem.', $pengguna), null];
+            return [500, self::pesanHalaman('Terjadi kesalahan',
+    $e::class . ': ' . $e->getMessage() . ' @ ' . basename($e->getFile()) . ':' . $e->getLine(), $pengguna), null];
         }
     }
 

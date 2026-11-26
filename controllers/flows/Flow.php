@@ -86,6 +86,30 @@ abstract class Flow
         return $peta;
     }
 
+    /** Nomor antrean terbaru milik pasien pada tanggal kunjungan tertentu (null bila belum ada). */
+    protected function nomorAntreanTerbaru(int $idPasien, string $tanggal): ?string
+    {
+        $n = $this->db->ambilNilai(
+            'SELECT a.nomorAntrean FROM Antrean a JOIN Booking b ON b.idBooking = a.idBooking
+            WHERE b.idPasien = ? AND b.tanggalKunjungan = ? ORDER BY a.idAntrean DESC LIMIT 1',
+            [$idPasien, $tanggal]
+        );
+        return $n === null ? null : (string) $n;
+    }
+
+    /** @return array<int,string> idBooking => nomorAntrean milik pasien */
+    protected function petaNomorAntrean(int $idPasien): array
+    {
+        $peta = [];
+        foreach ($this->db->ambilSemua(
+            'SELECT a.idBooking, a.nomorAntrean FROM Antrean a JOIN Booking b ON b.idBooking = a.idBooking WHERE b.idPasien = ?',
+            [$idPasien]
+        ) as $r) {
+            $peta[(int) $r['idBooking']] = (string) $r['nomorAntrean'];
+        }
+        return $peta;
+    }
+
     /**
      * Kartu "Pilih Jadwal" untuk booking: dokter yang praktik pada hari tanggal terpilih.
      * Booking tidak menyimpan dokter, jadi "antrean diambil" dibagi proporsional menurut kapasitas jam praktik tiap dokter.

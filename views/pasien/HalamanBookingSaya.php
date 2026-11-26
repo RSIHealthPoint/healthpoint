@@ -92,14 +92,13 @@ final class HalamanBookingSaya extends Boundary
     }
 
     /** Halaman UI-02: "Booking Saya" + kartu booking aktif + tombol batalkan (UC-03). @param array<int,string> $namaLayanan */
-    public function renderHalaman(array $namaLayanan): string
+    public function renderHalaman(array $namaLayanan, array $nomorAntrean = []): string
     {
         $t = $this->terakhir('tabel');
         $baris = is_array($t) ? (array) ($t['baris'] ?? []) : [];
         $jumlah = count($baris);
 
-        $o = '<div class="section-head"><h1 class="section-head__title">Booking Saya <span class="count-badge" aria-label="' . $jumlah . ' booking">' . $jumlah . '</span></h1>'
-            . '<a class="section-head__link" href="#">Riwayat</a></div>';
+        $o = '<div class="section-head"><h1 class="section-head__title">Booking Saya <span class="count-badge" aria-label="' . $jumlah . ' booking">' . $jumlah . '</span></h1></div>';
 
         foreach ($this->layar as $l) {
             if ($l['jenis'] === 'pesan' && in_array($l['data']['tipe'], ['sukses', 'galat'], true)) {
@@ -116,7 +115,14 @@ final class HalamanBookingSaya extends Boundary
             $vaksin = str_contains(strtolower($layanan), 'vaksin');
             $caption = $vaksin ? 'Booking Vaksinasi' : ($b['jenisBooking'] === 'Kontrol' ? 'Booking Kontrol' : 'Booking ' . $layanan);
             $jam = (string) $b['jamKontrol'] !== '' ? $b['jamKontrol'] . ' WIB' : 'Sesuai nomor antrean';
-
+            $nomor = $nomorAntrean[$id] ?? null;
+            if ($nomor === null) {
+                $tombolCek = '';
+            } elseif ((string) $b['tanggalKunjungan'] === Waktu::hariIni()) {
+                $tombolCek = '<a class="pill-button" href="/uc/05?nomor=' . rawurlencode($nomor) . '">Cek Antrean</a>';
+            } else {
+                $tombolCek = '<span class="pill-button pill-button--off">Cek di hari kunjungan</span>';
+            }
             $o .= '<article class="booking-card" id="booking-' . $id . '"><div class="booking-card__top">'
                 . '<span class="booking-card__icon">' . self::ikon($vaksin ? 'syringe' : 'stethoscope') . '</span>'
                 . '<div class="booking-card__body"><p class="booking-card__caption">' . self::h($caption) . '</p><h2 class="booking-card__title">' . self::h($layanan) . '</h2></div>'
@@ -127,14 +133,50 @@ final class HalamanBookingSaya extends Boundary
                 . '<li class="booking-meta__item">' . self::ikon('building') . 'Klinik Pratama</li>'
                 . '<li class="booking-meta__item">' . self::ikon('square-plus') . self::h($layanan) . '</li></ul>'
                 . '<div class="booking-ticket"><div class="ticket-row"><div class="ticket-code"><span class="qr-thumb">' . self::ikon('qr') . '</span>'
-                . '<div><p class="ticket-code__label">Kode Booking</p><p class="ticket-code__value">' . $id . '</p></div></div>'
-                . '<a class="pill-button" href="#booking-' . $id . '">Detail Booking</a></div>'
-                . '<form class="cancel-note" method="post" action="/uc/03" onsubmit="return confirm(\'Batalkan booking ini?\')">'
+                . '<div><p class="ticket-code__label">Nomor Antrean</p><p class="ticket-code__value">' . self::h($nomor ?? '-') . '</p></div></div>'
+                . $tombolCek . '</div>'
+                . '<form class="cancel-note" method="post" action="/uc/03" data-layanan="' . self::h($layanan) . '" data-tanggal="' . self::h(self::labelTanggal((string) $b['tanggalKunjungan'])) . '" data-jam="' . self::h($jam) . '" data-nomor="' . self::h($nomor ?? '-') . '">'
                 . '<input type="hidden" name="_token" value="' . self::h(Sesi::token()) . '">'
                 . '<input type="hidden" name="idBooking" value="' . $id . '"><input type="hidden" name="konfirmasi" value="1">'
                 . '<p class="cancel-note__text">' . self::ikon('alert') . 'Pembatalan maks. 2 jam sebelum kunjungan</p>'
                 . '<button class="cancel-note__button" type="submit">Batalkan Booking</button></form></div></article>';
         }
-        return $o;
-    }
+                return $o . self::modalKonfirmasiBatal();
+        }
+
+        /** Pop up konfirmasi pembatalan (SEQ-03 pesan 2-3). Satu modal dipakai bersama oleh semua kartu booking. */
+        private static function modalKonfirmasiBatal(): string
+        {
+            return '<div class="modal" id="modal-batal" role="alertdialog" aria-modal="true" aria-labelledby="modal-batal-judul" aria-describedby="modal-batal-isi" hidden>'
+                . '<div class="modal__backdrop" data-tutup></div>'
+                . '<div class="modal__dialog">'
+                . '<span class="modal__icon">' . self::ikon('alert') . '</span>'
+                . '<h2 class="modal__title" id="modal-batal-judul">Batalkan booking?</h2>'
+                . '<p class="modal__text" id="modal-batal-isi">Booking yang dibatalkan tidak dapat dikembalikan dan nomor antrean Anda akan dilepas.</p>'
+                . '<ul class="modal__detail">'
+                . '<li class="modal__detail-item modal__detail-item--strong"><span data-isi="layanan"></span></li>'
+                . '<li class="modal__detail-item">' . self::ikon('calendar') . '<span data-isi="tanggal"></span></li>'
+                . '<li class="modal__detail-item">' . self::ikon('clock') . '<span data-isi="jam"></span></li>'
+                . '<li class="modal__detail-item">' . self::ikon('qr') . '<span data-isi="nomor"></span></li>'
+                . '</ul>'
+                . '<div class="modal__actions">'
+                . '<button class="btn btn--sm modal__btn modal__btn--back" type="button" id="modal-batal-kembali" data-tutup>Tidak, Kembali</button>'
+                . '<button class="btn btn--sm modal__btn modal__btn--danger" type="button" id="modal-batal-ya">Ya, Batalkan</button>'
+                . '</div></div></div>'
+                . '<script>(function(){var m=document.getElementById("modal-batal");if(!m){return;}'
+                . 'var ya=document.getElementById("modal-batal-ya"),kembali=document.getElementById("modal-batal-kembali"),form=null,pemicu=null;'
+                . 'function isi(k,v){var e=m.querySelector("[data-isi=\\""+k+"\\"]");if(e){e.textContent=v;}}'
+                . 'function reset(){m.hidden=true;document.body.classList.remove("modal-open");ya.disabled=false;ya.textContent="Ya, Batalkan";}'
+                . 'function buka(f,p){form=f;pemicu=p;isi("layanan",f.dataset.layanan);isi("tanggal",f.dataset.tanggal);isi("jam",f.dataset.jam);'
+                . 'isi("nomor","Antrean "+f.dataset.nomor);reset();m.hidden=false;document.body.classList.add("modal-open");kembali.focus();}'
+                . 'function tutup(){reset();if(pemicu){pemicu.focus();}}'
+                . 'document.querySelectorAll("form.cancel-note").forEach(function(f){f.addEventListener("submit",function(e){e.preventDefault();buka(f,f.querySelector("button"));});});'
+                . 'm.querySelectorAll("[data-tutup]").forEach(function(el){el.addEventListener("click",tutup);});'
+                . 'ya.addEventListener("click",function(){if(!form){return;}ya.disabled=true;ya.textContent="Memproses\\u2026";form.submit();});'
+                . 'document.addEventListener("keydown",function(e){if(m.hidden){return;}'
+                . 'if(e.key==="Escape"){tutup();return;}'
+                . 'if(e.key==="Tab"){var a=document.activeElement;if(e.shiftKey&&a===kembali){e.preventDefault();ya.focus();}else if(!e.shiftKey&&a===ya){e.preventDefault();kembali.focus();}}});'
+                . 'window.addEventListener("pageshow",reset);})();</script>';
+        }
+    
 }

@@ -94,7 +94,7 @@ final class FormInformasiAntrean extends Boundary
             . '<form class="status-search" action="/uc/05" method="get"><div class="status-search__row">'
             . '<div class="status-search__field status-search__field--ticket"><label class="status-search__label" for="nomor-antrean">Nomor Antrean</label>'
             . '<div class="status-search__control">' . self::ikon('ticket')
-            . '<input class="status-search__input status-search__input--ticket" id="nomor-antrean" name="nomor" type="text" value="' . self::h($this->nomorAntrean === '' ? '' : TampilanPetugas::nomorAntrean($this->nomorAntrean)) . '"></div></div>'
+            . '<input class="status-search__input status-search__input--ticket" id="nomor-antrean" name="nomor" type="text" inputmode="numeric" placeholder="1" value="' . self::h($this->nomorAntrean === '' ? '' : TampilanPetugas::nomorAntrean($this->nomorAntrean)) . '"></div></div>'
             . '<div class="status-search__field"><label class="status-search__label" for="tanggal-kunjungan">Tanggal Kunjungan</label>'
             . '<div class="status-search__control">' . self::ikon('calendar')
             . '<input class="status-search__input status-search__input--date" id="tanggal-kunjungan" type="text" readonly value="' . self::h(TampilanPetugas::tanggal(Waktu::hariIni())) . '" title="Antrean berlaku untuk hari ini"></div></div>'

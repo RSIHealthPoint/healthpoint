@@ -56,4 +56,28 @@ final class Antrean extends Model
     {
         return ['idAntrean' => $this->idAntrean, 'nomorAntrean' => $this->nomorAntrean, 'statusAntrean' => $this->statusAntrean, 'waktuDaftar' => $this->waktuDaftar];
     }
+
+    /**
+     * Buat antrean untuk booking: nomor urut 1,2,3... per tanggal kunjungan, sehingga otomatis kembali ke 1 setiap hari.
+     * @return string|null nomor antrean, null bila gagal
+     */
+    public function buatUntukBooking(int $idBooking, string $tanggal): ?string
+    {
+        $nomor = (int) $this->db->ambilNilai(
+            'SELECT COALESCE(MAX(CAST(nomorAntrean AS UNSIGNED)), 0) FROM Antrean WHERE DATE(waktuDaftar) = ?',
+            [$tanggal]
+        ) + 1;
+        $waktu = $tanggal . ' ' . Waktu::sekarang()->format('H:i:s');
+        $ok = $this->db->jalankan(
+            'INSERT INTO Antrean (idBooking, nomorAntrean, statusAntrean, waktuDaftar) VALUES (?,?,?,?)',
+            [$idBooking, (string) $nomor, self::MENUNGGU, $waktu]
+        ) === 1;
+        return $ok ? (string) $nomor : null;
+    }
+
+    /** Hapus antrean milik booking (dipakai saat booking dibatalkan). */
+    public function hapusByBooking(int $idBooking): void
+    {
+        $this->db->jalankan('DELETE FROM Antrean WHERE idBooking = ?', [$idBooking]);
+    }
 }
